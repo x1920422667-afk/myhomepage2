@@ -124,49 +124,45 @@ var state = { view:'home', cls:'db_movie', sel:{}, page:1, totalPages:1, loading
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function cleanStr(s){return String(s||'').replace(/[《》\[\]【】]/g,'').replace(/[(（].*?[)）]/g,'').trim()}
-/* 图片加载失败：壳子内自动切换 fm.res 本地网关重试（Native 网络策略/壳代理），浏览器预览时直接移除占位 */
+/* 图片加载失败：壳子内自动切换 fm.res 本地网关重试（用原始 URL，避免二次代理），浏览器预览时直接移除占位 */
 function imgFail(img){
   if(!img) return;
   if(img.getAttribute('data-fm')){ img.remove(); return; }
   fmReady().then(function(fm){
     if(!img || !img.parentNode) return;
     if(fm && fm.res){
-      try{ img.setAttribute('data-fm','1'); img.src=fm.res(img.getAttribute('data-src')||img.src); return; }catch(e){}
+      try{ img.setAttribute('data-fm','1'); img.src=fm.res(img.getAttribute('data-raw')||img.getAttribute('data-src')||img.src); return; }catch(e){}
     }
     img.remove();
   });
 }
-/* 智能图片加载：立即直连（快则秒出）；壳子内直连未成功（DNS 卡死/图床不可达/加载失败）时，
-   自动切换 fm.res 本地网关（Native 网络策略与壳代理）重试——彻底解决海报加载不出 */
+/* 智能图片加载：
+   1. 立即直连（有代理走代理，无代理走原始）——快则秒出
+   2. 壳子 fm 就绪后：若直连未成功，切换 fm.res 壳子网关（用原始 URL，避免二次代理）
+   3. 3 秒超时兜底：直连卡死时主动切换
+   4. data-raw 保留原始 URL，专供 fm.res 使用 */
 function setImg(el, url){
   if(!url || !el) return;
+  var rawUrl = url;
+  el.setAttribute('data-raw', rawUrl);
   if(IMG_PROXY && url.indexOf('image.tmdb.org')>=0){ try{ url = IMG_PROXY + encodeURIComponent(url); }catch(e){} }
   el.setAttribute('data-src', url);
   el.src = url;
-  var tries=0;
-  function check(){
+  function tryFm(){
     if(!el || !el.parentNode) return;
-    try{
-      var done = el.complete && el.naturalWidth>0;
-      if(done) return;
-    }catch(e){ return; }
+    try{ if(el.complete && el.naturalWidth>0) return; }catch(e){ return; }
+    if(el.getAttribute('data-fm')) return;
     fmReady().then(function(fm){
       if(!el || !el.parentNode) return;
-      if(fm && fm.res){
-        if(!el.getAttribute('data-fm')){
-          el.setAttribute('data-fm','1');
-          el.src = fm.res(url);
-        }
-        return;
-      }
-      /* fm 尚未就绪（壳子注入晚于渲染）：延迟重查，最多 3 次 */
-      if(tries < 3){
-        tries++;
-        setTimeout(check, 2000);
+      if(fm && fm.res && !el.getAttribute('data-fm')){
+        el.setAttribute('data-fm','1');
+        el.src = fm.res(rawUrl);
       }
     });
   }
-  check();
+  tryFm();
+  setTimeout(tryFm, 3000);
+  setTimeout(tryFm, 7000);
 }
 function setImgs(root){
   if(!root) return;
@@ -1099,12 +1095,36 @@ document.addEventListener('keydown',function(e){
       if(_sc<_cbs){_cbs=_sc;_cb=el;}
     });
     if(_cb) best=_cb;
+    else if(dir==='up'){
+      /* 上方无卡片/快速入口时，优先选 hero 容器内的按钮（而非导航栏或隐藏按钮） */
+      document.querySelectorAll('.hero .hero-btn.focus').forEach(function(el){
+        if(el===cur) return;
+        if(el.offsetParent===null && el.getBoundingClientRect().width===0) return;
+        var r=el.getBoundingClientRect(),_x=r.left+r.width/2,_y=r.top+r.height/2,_dx=_x-cx,_dy=_y-cy;
+        if(_dy>=-8) return;
+        var _sc=Math.abs(_dy)+1.8*Math.abs(_dx);
+        if(_sc<_cbs){_cbs=_sc;_cb=el;}
+      });
+      if(_cb) best=_cb;
+    }
   }
   if(best){
     best.focus();
-    /* 焦点从下方卡片跳到 hero 按钮时，强制回滚到顶部，避免 hero 标题上半部分被固定导航栏遮住 */
-    var _p=best;
-    while(_p){ if(_p.classList && _p.classList.contains('hero')){ var _hv=document.getElementById('homeView'); if(_hv) _hv.scrollTop=0; break; } _p=_p.parentElement; }
+    /* 焦点滚动：hero 按钮强制回顶（focus 后设置，覆盖浏览器自动滚动）；其他元素自动居中 */
+    var _p=best, _inHero=false;
+    while(_p){ if(_p.classList && _p.classList.contains('hero')){ _inHero=true; break; } _p=_p.parentElement; }
+    if(_inHero){
+      var _hv=document.getElementById('homeView'); if(_hv) _hv.scrollTop=0;
+    } else {
+      try{
+        var _sc=best.closest('#homeView, .page');
+        if(_sc){
+          var _br=best.getBoundingClientRect(), _sr=_sc.getBoundingClientRect();
+          var _target=_sc.scrollTop+(_br.top-_sr.top)-(_sr.height-_br.height)/2;
+          _sc.scrollTop=Math.max(0,_target);
+        }
+      }catch(e){}
+    }
   }
 },true);
 
@@ -1126,6 +1146,22 @@ showHome();
   var pages=document.querySelectorAll('.page');
   for(var i=0;i<pages.length;i++) pages[i].addEventListener('scroll',onSmartScroll,{passive:true});
 })();
+/* 壳子 fm 注入后全局重扫：所有未加载成功的图片切换到 fm.res 网关（解决早渲染卡片错过 fm 注入时序的问题） */
+fmReady().then(function(fm){
+  if(!fm || !fm.res) return;
+  function rescan(){
+    var imgs = document.querySelectorAll('img[data-src]');
+    for(var i=0;i<imgs.length;i++){
+      var im = imgs[i];
+      if(im.getAttribute('data-fm')) continue;
+      try{ if(im.complete && im.naturalWidth>0) continue; }catch(e){}
+      im.setAttribute('data-fm','1');
+      im.src = fm.res(im.getAttribute('data-raw') || im.getAttribute('data-src'));
+    }
+  }
+  setTimeout(rescan, 600);
+  setTimeout(rescan, 3000);
+});
 fmReady().then(function(fm){
   try { if(fm && fm.ui && fm.ui.setToolbar){ var r=fm.ui.setToolbar(true); if(r&&r.catch) r.catch(function(){}); } } catch(e){}
   try { if(fm && fm.site && fm.site.info) fm.site.info().then(function(d){
