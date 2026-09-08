@@ -1,0 +1,963 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>CINEMA · 4K 家庭影院 WebHome</title>
+<style>
+:root{--bg:#07090d;--panel:rgba(18,23,31,.9);--line:rgba(255,255,255,.1);--text:#f6f7f9;--muted:rgba(255,255,255,.64);--muted2:rgba(255,255,255,.42);--ease:cubic-bezier(.22,.72,.18,1)}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07090d;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}button,input{font:inherit;color:inherit}button{border:0;background:none;outline:0;cursor:pointer}.hidden{display:none!important}.app{position:relative;width:100vw;height:var(--fm-web-height,100vh);overflow:hidden;background:radial-gradient(1200px 800px at 82% 8%,rgba(89,116,171,.16),transparent 60%),linear-gradient(180deg,#0a0d12,#07090d)}
+.topbar{position:absolute;left:0;right:0;top:0;height:78px;z-index:20;display:flex;align-items:center;padding:0 58px;background:linear-gradient(180deg,rgba(4,6,9,.92),rgba(4,6,9,.45),transparent)}.brand{display:flex;align-items:center;gap:12px;margin-right:42px}.mark{width:34px;height:34px;border-radius:11px;background:linear-gradient(145deg,#fff,#aeb7c8);color:#0a0d12;display:flex;align-items:center;justify-content:center;font-weight:1000}.brand span{font-size:18px;font-weight:900;letter-spacing:.13em}.nav{display:flex;gap:6px}.nav button,.topicon{height:44px;border-radius:999px;color:var(--muted);transition:.17s var(--ease)}.nav button{padding:0 16px;font-size:15px;font-weight:850;white-space:nowrap}.nav button.active{background:rgba(255,255,255,.08);color:#fff}.topright{margin-left:auto;display:flex;align-items:center;gap:8px}.topicon{width:44px;font-size:18px;display:flex;align-items:center;justify-content:center}.clock{margin-left:10px;color:var(--muted);font-size:14px;font-weight:750}
+.focus:focus{transform:scale(1.045);background:rgba(255,255,255,.105)!important;color:#fff!important;box-shadow:0 0 0 2px rgba(255,255,255,.94),0 14px 36px rgba(0,0,0,.35);z-index:40}.focus{position:relative;transition:transform .17s var(--ease),background .17s var(--ease),box-shadow .17s var(--ease)}
+#homeView{position:absolute;inset:0;top:0;right:0;bottom:0;left:0}
+.hero{position:absolute;left:0;right:0;top:0;height:66vh;min-height:670px;overflow:hidden}.hero-bg{position:absolute;inset:0;top:0;right:0;bottom:0;left:0;background:radial-gradient(560px 360px at 72% 38%,rgba(139,161,201,.42),transparent 58%),linear-gradient(90deg,rgba(7,9,13,.98),rgba(7,9,13,.73) 28%,rgba(7,9,13,.22) 66%,rgba(7,9,13,.05)),linear-gradient(180deg,rgba(7,9,13,.2),rgba(7,9,13,0) 40%,#07090d 100%),linear-gradient(135deg,#33445f,#111823 58%,#07090d);transform:scale(1.03)}.hero-bg .himg{position:absolute;inset:0;top:0;right:0;bottom:0;left:0;width:100%;height:100%;object-fit:cover;opacity:.8}.hero-bg .hshade{position:absolute;inset:0;top:0;right:0;bottom:0;left:0;background:linear-gradient(90deg,rgba(7,9,13,.98),rgba(7,9,13,.76) 30%,rgba(7,9,13,.30) 62%,rgba(7,9,13,.06)),linear-gradient(180deg,rgba(7,9,13,.22),rgba(7,9,13,.04) 42%,rgba(7,9,13,.98) 98%)}.hero-bg:after{content:"";position:absolute;inset:0;top:0;right:0;bottom:0;left:0;background:radial-gradient(420px 280px at 72% 48%,rgba(255,255,255,.07),transparent 70%)}.hero-content{position:absolute;left:64px;bottom:62px;width:52vw;max-width:720px;z-index:5}.kicker{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:850;letter-spacing:.14em;color:var(--muted);margin-bottom:15px}.dotx{width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 18px rgba(255,255,255,.7)}.hero h1{margin:0;font-size:68px;font-size:clamp(52px,5.9vw,88px);line-height:.97;letter-spacing:-.035em;font-weight:950}.hero-meta{margin-top:14px;font-size:17px;font-weight:700;color:rgba(255,255,255,.73)}.hero-desc{margin-top:14px;max-width:690px;color:rgba(255,255,255,.67);font-size:16px;line-height:1.7;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.actions{display:flex;gap:10px;margin-top:24px}.hero-btn{height:50px;padding:0 22px;border-radius:999px;background:rgba(255,255,255,.095);font-weight:900}.hero-btn.primary{background:#fff;color:#0a0d12}.badges{display:flex;gap:8px;margin-top:17px}.badge{padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.26);border:1px solid rgba(255,255,255,.11);font-size:11px;font-weight:900;color:rgba(255,255,255,.8)}
+.main{position:absolute;left:0;right:0;top:58vh;bottom:0;z-index:8;padding:0 58px 38px;overflow:hidden;background:linear-gradient(180deg,transparent,#07090d 18%)}.sec{margin-top:15px}.head{display:flex;justify-content:space-between;align-items:end;margin-bottom:12px}.title{font-size:23px;font-weight:930;letter-spacing:-.02em}.sub{font-size:12px;color:var(--muted2)}.rail{display:flex;gap:15px}.card{position:relative;flex:0 0 174px;height:250px;border-radius:17px;overflow:hidden;background:linear-gradient(145deg,#29384c,#0e141d);box-shadow:0 9px 26px rgba(0,0,0,.24)}.poster{position:absolute;inset:0;top:0;right:0;bottom:0;left:0}.poster .pimg{position:absolute;inset:0;top:0;right:0;bottom:0;left:0;width:100%;height:100%;object-fit:cover}.card::after{content:"";position:absolute;inset:0;top:0;right:0;bottom:0;left:0;background:linear-gradient(180deg,transparent 42%,rgba(0,0,0,.92))}.p0{background:radial-gradient(circle at 72% 24%,rgba(225,233,245,.5),transparent 20%),linear-gradient(145deg,#677a99,#182230 66%,#0b1017)}.p1{background:radial-gradient(circle at 70% 30%,rgba(238,212,174,.38),transparent 23%),linear-gradient(145deg,#6c6257,#211d1a 60%,#0d0f13)}.p2{background:radial-gradient(circle at 70% 28%,rgba(187,220,255,.35),transparent 23%),linear-gradient(145deg,#536f91,#111c28 60%,#070c11)}.p3{background:radial-gradient(circle at 68% 30%,rgba(255,178,139,.35),transparent 22%),linear-gradient(145deg,#754f49,#26171b 60%,#0c0b0d)}.p4{background:radial-gradient(circle at 74% 25%,rgba(162,209,255,.36),transparent 20%),linear-gradient(145deg,#405e79,#0d151e 62%,#070b10)}.p5{background:radial-gradient(circle at 70% 30%,rgba(233,211,166,.34),transparent 20%),linear-gradient(145deg,#78664c,#221916 62%,#0d0b0b)}.p6{background:radial-gradient(circle at 65% 26%,rgba(216,227,244,.35),transparent 20%),linear-gradient(145deg,#556675,#141a20 62%,#070a0e)}.p7{background:radial-gradient(circle at 72% 31%,rgba(210,170,240,.35),transparent 20%),linear-gradient(145deg,#554465,#16121c 62%,#09080d)}.ctop{position:absolute;left:11px;top:11px;z-index:3;display:flex;gap:5px}.cpill{padding:5px 8px;border-radius:999px;background:rgba(0,0,0,.46);border:1px solid rgba(255,255,255,.1);font-size:10px;font-weight:900}.cinfo{position:absolute;left:12px;right:12px;bottom:13px;z-index:3}.ctitle{font-size:15px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cmeta{margin-top:5px;font-size:11px;color:rgba(255,255,255,.63);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.progress{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.1);z-index:4}.progress i{display:block;height:100%;background:#fff}
+.quick{display:flex;gap:11px}.quickbtn{height:84px;flex:1;border-radius:17px;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.022));border:1px solid rgba(255,255,255,.065);display:flex;align-items:center;gap:13px;padding:0 17px;text-align:left}.qi{width:39px;height:39px;border-radius:12px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-weight:900}.qt{font-size:15px;font-weight:900}.qd{font-size:11px;color:var(--muted2);margin-top:4px}
+.overlay{position:absolute;inset:0;top:0;right:0;bottom:0;left:0;background:rgba(4,6,9,.76);backdrop-filter:blur(6px);z-index:50;display:none}.drawer{position:absolute;left:22px;top:92px;bottom:24px;width:300px;padding:17px;border-radius:24px;background:rgba(10,13,18,.96);border:1px solid rgba(255,255,255,.09);z-index:60;transform:translateX(-110%);transition:.22s var(--ease);box-shadow:0 30px 90px rgba(0,0,0,.45)}.drawer.open{transform:translateX(0)}.overlay.open{display:block}.drawer h3{font-size:13px;color:var(--muted2);margin:7px 9px 12px}.ditem{width:100%;height:48px;border-radius:13px;text-align:left;padding:0 13px;margin-bottom:6px;color:var(--muted);font-weight:820}.ditem.active{background:rgba(255,255,255,.08);color:#fff}
+.search{position:absolute;inset:0;top:0;right:0;bottom:0;left:0;z-index:70;background:rgba(5,7,10,.97);display:none}.search.open{display:block}.searchbox{width:82vw;max-width:1100px;margin:96px auto}.searchrow{display:flex;gap:10px}.searchinput{flex:1;height:64px;border-radius:20px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.055);padding:0 22px;font-size:21px;font-weight:800}.searchclose{width:92px;border-radius:17px;background:rgba(255,255,255,.08);font-weight:900}.searchtools{display:flex;align-items:center;gap:10px;margin-top:18px}.hint{margin-top:16px;font-size:13px;color:var(--muted2)}.results{display:flex;gap:15px;margin-top:18px;flex-wrap:wrap}
+.detail{position:absolute;inset:0;top:0;right:0;bottom:0;left:0;z-index:80;background:#080b10;display:none;overflow:hidden}.detail.open{display:block}.detailbg{position:absolute;inset:0;top:0;right:0;bottom:0;left:0;background:linear-gradient(90deg,rgba(7,9,13,.98),rgba(7,9,13,.80) 34%,rgba(7,9,13,.23) 70%,rgba(7,9,13,.06)),linear-gradient(180deg,rgba(7,9,13,.15),rgba(7,9,13,.98) 87%),linear-gradient(135deg,#344760,#111923 58%,#080b10)}.detailbg .himg{position:absolute;inset:0;top:0;right:0;bottom:0;left:0;width:100%;height:100%;object-fit:cover;opacity:.55}.detailbg .hshade{position:absolute;inset:0;top:0;right:0;bottom:0;left:0;background:linear-gradient(90deg,rgba(7,9,13,.98),rgba(7,9,13,.82) 34%,rgba(7,9,13,.30) 70%,rgba(7,9,13,.08)),linear-gradient(180deg,rgba(7,9,13,.12),rgba(7,9,13,.99) 86%)}.detailcopy{position:absolute;left:62px;top:100px;width:52vw;max-width:660px}.dkicker{font-size:12px;letter-spacing:.14em;color:var(--muted);font-weight:900}.dtitle{margin-top:12px;font-size:56px;font-size:clamp(44px,4.6vw,76px);line-height:.97;font-weight:950;letter-spacing:-.03em}.dmeta{margin-top:15px;font-size:15px;color:rgba(255,255,255,.72);font-weight:720}.ddesc{margin-top:14px;max-width:650px;font-size:15px;line-height:1.72;color:rgba(255,255,255,.67);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.dactions{display:flex;gap:10px;margin-top:22px}.dbtn{height:50px;padding:0 20px;border-radius:999px;background:rgba(255,255,255,.09);font-weight:900}.dbtn.primary{background:#fff;color:#0a0d12}.dtinfo{margin-top:16px;max-height:150px;overflow:auto;scrollbar-width:none;font-size:14px;line-height:1.7;color:rgba(255,255,255,.7)}.dtinfo::-webkit-scrollbar{display:none}.castline{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.casttag{padding:6px 11px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06);font-size:12px;font-weight:800;color:rgba(255,255,255,.82)}.shotsrow{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;margin-top:10px}.shotsrow::-webkit-scrollbar{display:none}.shot{width:210px;height:118px;border-radius:12px;object-fit:cover;flex:0 0 auto;border:1px solid rgba(255,255,255,.08)}.simrow{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;margin-top:10px}.simrow::-webkit-scrollbar{display:none}.simcard{flex:0 0 128px;height:184px;border-radius:13px;overflow:hidden;position:relative;background:linear-gradient(145deg,#29384c,#0e141d)}.simcard img{position:absolute;inset:0;top:0;right:0;bottom:0;left:0;width:100%;height:100%;object-fit:cover}.simcard .st{position:absolute;left:8px;right:8px;bottom:8px;z-index:2;font-size:11px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.respanel{position:absolute;right:46px;top:96px;width:410px;height:540px;padding:18px;border-radius:24px;background:rgba(8,11,16,.82);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(16px);box-shadow:0 30px 80px rgba(0,0,0,.42)}.restitle{font-size:18px;font-weight:930;padding:4px 6px 12px;display:flex;align-items:center;gap:10px}.restitle .rsub{font-size:11px;color:var(--muted2);font-weight:700}.restabs{display:flex;gap:6px;flex-wrap:wrap}.rtab{padding:7px 11px;border-radius:999px;font-size:11px;color:var(--muted);font-weight:900}.rtab.active{background:rgba(255,255,255,.09);color:#fff}.reslist{display:flex;flex-direction:column;gap:7px;height:392px;overflow:auto;scrollbar-width:none;margin-top:12px}.reslist::-webkit-scrollbar{display:none}.ritem{min-height:62px;padding:10px 12px;border-radius:15px;text-align:left;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.05)}.rline{display:flex;align-items:center;gap:8px}.rdot{width:8px;height:8px;border-radius:50%;background:#8ce6a7;box-shadow:0 0 12px rgba(140,230,167,.4)}.rdot.r-bad{background:#ff5d5d;box-shadow:0 0 12px rgba(255,93,93,.35)}.rdot.r-locked{background:#f2c94c;box-shadow:0 0 12px rgba(242,201,76,.35)}.rdot.r-unc{background:#7a8699;box-shadow:none}.rname{font-size:13px;font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rtags{display:flex;gap:4px;margin-left:auto;flex:0 0 auto}.rtag{font-size:9px;font-weight:900;padding:3px 6px;border-radius:999px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.85)}.rmeta{margin-top:6px;font-size:11px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rstatus{padding:24px 10px;text-align:center;font-size:13px;color:var(--muted2);font-weight:800}.rfallback{display:flex;justify-content:center;gap:8px;margin-top:6px;flex-wrap:wrap}.rfallback .rtab{background:rgba(255,255,255,.09);color:#fff}.dtabs{position:absolute;left:62px;right:62px;bottom:30px;display:flex;gap:8px}.dtab{height:46px;min-width:108px;padding:0 18px;border-radius:999px;color:var(--muted);font-weight:900}.dtab.active{background:rgba(255,255,255,.09);color:#fff}
+.page{position:absolute;left:0;right:0;top:0;bottom:0;padding:88px 58px 46px;overflow-y:auto;overflow-x:hidden;background:radial-gradient(1000px 600px at 82% 0%,rgba(89,116,171,.1),transparent 60%),linear-gradient(180deg,#0a0d12,#07090d);scrollbar-width:none}.page::-webkit-scrollbar{display:none}.bhead{display:flex;align-items:end;justify-content:space-between;margin:8px 0 18px}.bhead .title{font-size:30px;font-weight:950;letter-spacing:-.02em}.bhead .sub{font-size:12px;color:var(--muted2);margin-bottom:5px}.frow{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}.fname{font-size:12px;color:var(--muted2);font-weight:850;min-width:38px}.chip{height:36px;padding:0 15px;border-radius:999px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07);color:var(--muted);font-size:13px;font-weight:800;transition:.15s var(--ease)}.chip.active{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.22)}.grid{display:flex;flex-wrap:wrap;gap:15px;padding-top:8px}.grid .card{flex:0 0 168px;height:240px}.morebtn{margin:30px auto 12px;display:block;height:48px;padding:0 36px;border-radius:999px;background:rgba(255,255,255,.07);font-weight:900;color:#fff}.empty{padding:90px 0;text-align:center;color:var(--muted2);font-size:15px;font-weight:800}
+.toast{position:absolute;left:50%;bottom:34px;transform:translateX(-50%) translateY(8px);z-index:100;padding:10px 16px;border-radius:999px;background:rgba(10,13,18,.95);border:1px solid rgba(255,255,255,.09);opacity:0;transition:.2s var(--ease);font-size:13px;font-weight:800}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+html.no-layout-gap .brand>*{margin-right:12px}html.no-layout-gap .nav>*{margin-right:6px}html.no-layout-gap .topright>*{margin-right:8px}html.no-layout-gap .kicker>*{margin-right:10px}html.no-layout-gap .actions>*{margin-right:10px}html.no-layout-gap .badges>*{margin-right:8px}html.no-layout-gap .rail>*{margin-right:15px}html.no-layout-gap .ctop>*{margin-right:5px}html.no-layout-gap .quick>*{margin:0 11px 11px 0}html.no-layout-gap .quickbtn>*{margin-right:13px}html.no-layout-gap .searchrow>*{margin-right:10px}html.no-layout-gap .searchtools>*{margin-right:10px}html.no-layout-gap .results>*{margin:0 15px 15px 0}html.no-layout-gap .dactions>*{margin-right:10px}html.no-layout-gap .castline>*{margin:0 8px 8px 0}html.no-layout-gap .shotsrow>*{margin-right:10px}html.no-layout-gap .simrow>*{margin-right:12px}html.no-layout-gap .restitle>*{margin-right:10px}html.no-layout-gap .restabs>*{margin:0 6px 6px 0}html.no-layout-gap .reslist>*{margin:0 0 7px 0}html.no-layout-gap .rline>*{margin-right:8px}html.no-layout-gap .rtags>*{margin-right:4px}html.no-layout-gap .rfallback>*{margin-right:8px}html.no-layout-gap .dtabs>*{margin-right:8px}html.no-layout-gap .frow>*{margin:0 8px 8px 0}html.no-layout-gap .grid>*{margin:0 15px 15px 0}html.no-layout-gap .grid{margin-right:-15px}html.no-layout-gap .results{margin-right:-15px}html.no-layout-gap .quick{margin-right:-11px}html.no-layout-gap .frow{margin-right:-8px}
+@media(max-width:1360px){.topbar{padding:0 34px}.brand{margin-right:22px}.nav button{padding:0 11px}.hero-content{left:40px;width:56vw}.main{padding-left:40px;padding-right:40px}.card{flex-basis:158px;height:226px}.respanel{right:24px;width:350px}.detailcopy{left:40px;width:54vw}.dtabs{left:40px;right:40px}.page{padding-left:40px;padding-right:40px}.grid .card{flex-basis:152px;height:218px}}
+</style></head><body><script>
+/* ===== 兼容引导层（电视旧 WebView 内核 Chromium 51-70 安全启动，ES5 书写） ===== */
+(function(){
+  var html=document.documentElement;
+  function addCls(n){ var s=(' '+html.className+' ').replace(/\s+/g,' '); if(s.indexOf(' '+n+' ')<0){ html.className=(s+n).trim(); } }
+  /* polyfill */
+  if(!String.prototype.padStart){ String.prototype.padStart=function(l,p){ l=Math.max(Number(l)||0,this.length); p=String(p==null?' ':p); if(!p)p=' '; var s=this; while(s.length<l){ if(p.length>l-s.length)p=p.slice(0,l-s.length); s=p+s; } return s; }; }
+  if(!String.prototype.padEnd){ String.prototype.padEnd=function(l,p){ l=Math.max(Number(l)||0,this.length); p=String(p==null?' ':p); if(!p)p=' '; var s=this; while(s.length<l){ if(p.length>l-s.length)p=p.slice(0,l-s.length); s+=p; } return s; }; }
+  if(!String.prototype.includes){ String.prototype.includes=function(s,i){ return this.indexOf(String(s),i==null?0:i)!==-1; }; }
+  if(!String.prototype.startsWith){ String.prototype.startsWith=function(s,i){ return this.indexOf(String(s),i==null?0:i)===0; }; }
+  if(!String.prototype.endsWith){ String.prototype.endsWith=function(s){ var l=String(s).length; return l<=this.length&&this.slice(this.length-l)===String(s); }; }
+  if(!String.prototype.trim){ String.prototype.trim=function(){ return this.replace(/^\s+|\s+$/g,''); }; }
+  if(!Array.prototype.includes){ Array.prototype.includes=function(x,i){ return this.indexOf(x,i==null?0:i)!==-1; }; }
+  if(!Array.prototype.find){ Array.prototype.find=function(fn){ for(var i=0;i<this.length;i++){ if(fn(this[i],i,this)) return this[i]; } return undefined; }; }
+  if(!Array.prototype.findIndex){ Array.prototype.findIndex=function(fn){ for(var i=0;i<this.length;i++){ if(fn(this[i],i,this)) return i; } return -1; }; }
+  if(!Array.prototype.flat){ Array.prototype.flat=function(d){ d=typeof d==='number'?d:1; var out=[]; function go(a,n){ for(var i=0;i<a.length;i++){ if(n>0&&a[i]&&typeof a[i].length==='number'&&!a[i].nodeType){ go(a[i],n-1); } else out.push(a[i]); } } go(this,d); return out; }; }
+  if(!Array.from){ Array.from=function(a){ try{ return Array.prototype.slice.call(a); }catch(e){ var r=[]; for(var i=0;i<a.length;i++) r.push(a[i]); return r; } }; }
+  if(!Object.values){ Object.values=function(o){ var r=[]; for(var k in o){ if(Object.prototype.hasOwnProperty.call(o,k)) r.push(o[k]); } return r; }; }
+  if(!Object.entries){ Object.entries=function(o){ var r=[]; for(var k in o){ if(Object.prototype.hasOwnProperty.call(o,k)) r.push([k,o[k]]); } return r; }; }
+  if(!Object.assign){ Object.assign=function(t){ for(var i=1;i<arguments.length;i++){ var s=arguments[i]; if(s){ for(var k in s){ if(Object.prototype.hasOwnProperty.call(s,k)) t[k]=s[k]; } } } return t; }; }
+  if(window.NodeList&&!NodeList.prototype.forEach){ NodeList.prototype.forEach=function(fn,ctx){ for(var i=0;i<this.length;i++) fn.call(ctx,this[i],i,this); }; }
+  if(window.HTMLCollection&&!HTMLCollection.prototype.forEach){ HTMLCollection.prototype.forEach=function(fn,ctx){ for(var i=0;i<this.length;i++) fn.call(ctx,this[i],i,this); }; }
+  if(!Promise.prototype.finally){ Promise.prototype.finally=function(fn){ var P=this.constructor; return this.then(function(v){ return P.resolve(fn()).then(function(){ return v; }); },function(e){ return P.resolve(fn()).then(function(){ throw e; }); }); }; }
+  /* 特性检测 → 降级类 */
+  try{ if(window.CSS&&CSS.supports){ if(!CSS.supports('font-size','clamp(10px,1vw,20px)')||!CSS.supports('width','min(100px,50%)')) addCls('no-css-functions'); } }catch(e){}
+  if(window.fongmiBridge) addCls('fm-native');
+  /* flex gap 运行时实测（官方方法：隐藏 flex 容器 gap 10 vs 0 的 scrollWidth 差） */
+  function probeGap(){
+    if(!document.body) return;
+    var d=document.createElement('div');
+    d.style.cssText='position:absolute;visibility:hidden;top:0;left:0;display:flex;gap:10px;';
+    var a=document.createElement('div'),b=document.createElement('div');
+    a.style.cssText='width:10px;height:10px;flex:0 0 auto'; b.style.cssText='width:10px;height:10px;flex:0 0 auto';
+    d.appendChild(a); d.appendChild(b);
+    document.body.appendChild(d);
+    var w1=d.scrollWidth;
+    d.style.gap='0px';
+    var w0=d.scrollWidth;
+    document.body.removeChild(d);
+    if(w1-w0<8) addCls('no-layout-gap');
+  }
+  if(document.body) probeGap(); else document.addEventListener('DOMContentLoaded',probeGap);
+})();
+</script><div class="app">
+<header class="topbar"><div class="brand"><div class="mark">C</div><span>CINEMA</span></div><nav class="nav" id="nav"></nav><div class="topright"><button class="topicon focus" id="searchBtn" tabindex="0">⌕</button><button class="topicon focus" id="menuBtn" tabindex="0">☰</button><div class="clock" id="clock">--:--</div></div></header>
+
+<div id="homeView">
+<section class="hero"><div class="hero-bg" id="heroBg"><img class="himg" id="heroImg" alt=""><div class="hshade"></div></div><div class="hero-content"><div class="kicker"><span class="dotx"></span><span>CINEMA PICK · 4K HDR</span></div><h1 id="heroTitle">加载中…</h1><div class="hero-meta" id="heroMeta"></div><div class="hero-desc" id="heroDesc"></div><div class="actions"><button class="hero-btn primary focus" id="heroPlay" tabindex="0">▶ 立即播放</button><button class="hero-btn focus" id="heroDetail" tabindex="0">详情</button></div><div class="badges" id="heroBadges"></div></div></section>
+<main class="main"><section class="sec"><div class="head"><div class="title">继续观看</div><div class="sub" id="continueSub">接着上次的位置继续</div></div><div class="rail" id="continue"></div></section><section class="sec"><div class="head"><div class="title">为你精选</div><div class="sub">综合热度趋势</div></div><div class="rail" id="pick"></div></section><section class="sec"><div class="head"><div class="title">快速入口</div><div class="sub">遥控器一键进入</div></div><div class="quick" id="quick"></div></section><section class="sec"><div class="head"><div class="title">热门电影</div><div class="sub">本周热度</div></div><div class="rail" id="hot"></div></section></main>
+</div>
+
+<div class="page hidden" id="browseView"><div class="bhead"><div><div class="title" id="bTitle"></div><div class="sub" id="bSub"></div></div><div class="sub" id="bCount"></div></div><div id="bFilters"></div><div class="grid" id="bGrid"></div><button class="morebtn focus" id="bMore" tabindex="0" style="display:none">加载更多</button><div class="empty hidden" id="bEmpty"></div></div>
+
+<div class="page hidden" id="favsView"><div class="bhead"><div><div class="title">我的收藏</div><div class="sub">收藏的影片都在这里</div></div></div><div class="grid" id="favGrid"></div><div class="empty" id="favEmpty" style="display:none">还没有收藏，去详情页点「＋ 收藏」吧</div></div>
+
+<div class="overlay" id="overlay"></div><aside class="drawer" id="drawer"><div id="drawerBody"></div></aside>
+
+<section class="search" id="search"><div class="searchbox"><div class="searchrow"><input class="searchinput" id="searchInput" placeholder="搜索电影、剧集、演员" autocomplete="off"><button class="searchclose focus" id="searchClose" tabindex="0">返回</button></div><div class="searchtools"><button class="hero-btn focus" id="nativeSearchBtn" tabindex="0" style="display:none">原生搜索</button></div><div class="hint">支持中文、英文片名和演员名 · 回车搜索</div><div class="results" id="results"></div></div></section>
+
+<section class="detail" id="detail"><div class="detailbg" id="detailBg"><img class="himg" id="detailImg" alt=""><div class="hshade"></div></div><div class="detailcopy"><div class="dkicker" id="dkicker">FEATURED MOVIE · 4K HDR</div><div class="dtitle" id="dtitle"></div><div class="dmeta" id="dmeta"></div><div class="ddesc" id="ddesc"></div><div class="dactions"><button class="dbtn primary focus" id="dplay" tabindex="0">▶ 播放</button><button class="dbtn focus" id="resourceBtn" tabindex="0">资源</button><button class="dbtn focus" id="fav" tabindex="0">＋ 收藏</button><button class="dbtn focus" id="dback" tabindex="0">返回</button></div><div class="dtinfo hidden" id="dtinfo"></div></div><div class="respanel hidden" id="respanel"><div class="restitle">资源中心<span class="rsub" id="resSub"></span></div><div class="restabs" id="restabs"></div><div class="reslist" id="reslist"></div></div><div class="dtabs" id="dtabs"></div></section>
+<div class="toast" id="toast"></div></div>
+
+<script type="application/json" id="doubanSource">
+{"mode":"douban","classes":[{"id":"db_trend","name":"综合热榜","handler":"trend"},{"id":"db_hot_movie","name":"热门电影","handler":"hot_gaia"},{"id":"db_movie","name":"电影片库","handler":"movie","defaults":{"类型":"电影","sort":"T"}},{"id":"db_tv_hot","name":"热播剧集","handler":"tv_hot"},{"id":"db_tv","name":"剧集片库","handler":"tv","defaults":{"类型":"电视剧","sort":"T"}},{"id":"db_show","name":"综艺片库","handler":"tv","defaults":{"类型":"综艺","sort":"T"}},{"id":"db_anime","name":"动漫片库","handler":"anime","defaults":{"anime_source":"tmdb","sort":"T"}},{"id":"db_doc","name":"纪录片库","handler":"documentary","defaults":{"media":"movie","sort":"T"}},{"id":"db_movie_rank","name":"电影榜单","handler":"rank_list_movie"},{"id":"db_tv_rank","name":"剧集榜单","handler":"rank_list_tv"}],"filters":{"db_trend":[{"key":"db_sort","name":"榜单","value":[{"n":"实时热门","v":""},{"n":"热门电影","v":"db_movie"},{"n":"国产剧","v":"db_tv_cn"},{"n":"美剧","v":"db_tv_us"},{"n":"综艺","v":"db_variety"}]}],"db_hot_movie":[{"key":"sort","name":"排序","value":[{"n":"热度","v":"recommend"},{"n":"最新","v":"time"},{"n":"评分","v":"rank"}]},{"key":"area","name":"地区","value":[{"n":"全部","v":"全部"},{"n":"华语","v":"华语"},{"n":"欧美","v":"欧美"},{"n":"韩国","v":"韩国"},{"n":"日本","v":"日本"}]}],"db_movie":[{"key":"sort","name":"排序","value":[{"n":"近期热度","v":"T"},{"n":"首映时间","v":"R"},{"n":"高分优先","v":"S"}]},{"key":"类型","name":"类型","value":[{"n":"全部电影","v":"电影"},{"n":"剧情","v":"剧情"},{"n":"喜剧","v":"喜剧"},{"n":"爱情","v":"爱情"},{"n":"动作","v":"动作"},{"n":"科幻","v":"科幻"},{"n":"动画","v":"动画"},{"n":"悬疑","v":"悬疑"},{"n":"犯罪","v":"犯罪"},{"n":"恐怖","v":"恐怖"},{"n":"奇幻","v":"奇幻"},{"n":"纪录片","v":"纪录片"},{"n":"冒险","v":"冒险"},{"n":"历史","v":"历史"},{"n":"战争","v":"战争"}]},{"key":"地区","name":"地区","value":[{"n":"全部","v":""},{"n":"中国大陆","v":"中国大陆"},{"n":"香港","v":"香港"},{"n":"台湾","v":"台湾"},{"n":"日本","v":"日本"},{"n":"韩国","v":"韩国"},{"n":"美国","v":"美国"},{"n":"英国","v":"英国"},{"n":"泰国","v":"泰国"},{"n":"法国","v":"法国"},{"n":"德国","v":"德国"}]},{"key":"年代","name":"年代","value":[{"n":"全部","v":""},{"n":"2026","v":"2026"},{"n":"2025","v":"2025"},{"n":"2024","v":"2024"},{"n":"2023","v":"2023"},{"n":"2022","v":"2022"},{"n":"2021","v":"2021"},{"n":"2020","v":"2020"},{"n":"2019","v":"2019"},{"n":"2018","v":"2018"},{"n":"2017","v":"2017"},{"n":"2016","v":"2016"},{"n":"2015","v":"2015"},{"n":"2014","v":"2014"},{"n":"2013","v":"2013"},{"n":"2012","v":"2012"},{"n":"2011","v":"2011"},{"n":"2010","v":"2010"},{"n":"2009","v":"2009"},{"n":"2008","v":"2008"},{"n":"2007","v":"2007"},{"n":"2006","v":"2006"},{"n":"2005","v":"2005"},{"n":"2004","v":"2004"},{"n":"2003","v":"2003"},{"n":"2002","v":"2002"},{"n":"2001","v":"2001"},{"n":"2000","v":"2000"},{"n":"1999","v":"1999"},{"n":"1998","v":"1998"},{"n":"1997","v":"1997"},{"n":"1996","v":"1996"},{"n":"1995","v":"1995"},{"n":"1994","v":"1994"},{"n":"1993","v":"1993"}]}],"db_tv_hot":[{"key":"type","name":"榜单","value":[{"n":"热播剧集","v":"tv_hot"},{"n":"国产剧","v":"tv_domestic"},{"n":"美剧","v":"tv_american"},{"n":"日剧","v":"tv_japanese"},{"n":"韩剧","v":"tv_korean"}]}],"db_tv":[{"key":"sort","name":"排序","value":[{"n":"近期热度","v":"T"},{"n":"首播时间","v":"R"},{"n":"高分优先","v":"S"}]},{"key":"类型","name":"类型","value":[{"n":"全部剧集","v":"电视剧"},{"n":"剧情","v":"剧情"},{"n":"喜剧","v":"喜剧"},{"n":"爱情","v":"爱情"},{"n":"悬疑","v":"悬疑"},{"n":"科幻","v":"科幻"},{"n":"犯罪","v":"犯罪"},{"n":"动作","v":"动作"},{"n":"儿童","v":"儿童"}]},{"key":"地区","name":"地区","value":[{"n":"全部","v":""},{"n":"中国大陆","v":"中国大陆"},{"n":"香港","v":"香港"},{"n":"台湾","v":"台湾"},{"n":"日本","v":"日本"},{"n":"韩国","v":"韩国"},{"n":"美国","v":"美国"},{"n":"英国","v":"英国"},{"n":"泰国","v":"泰国"},{"n":"法国","v":"法国"},{"n":"德国","v":"德国"}]},{"key":"年代","name":"年代","value":[{"n":"全部","v":""},{"n":"2026","v":"2026"},{"n":"2025","v":"2025"},{"n":"2024","v":"2024"},{"n":"2023","v":"2023"},{"n":"2022","v":"2022"},{"n":"2021","v":"2021"},{"n":"2020","v":"2020"},{"n":"2019","v":"2019"}]}],"db_show":[{"key":"sort","name":"排序","value":[{"n":"近期热度","v":"T"},{"n":"首播时间","v":"R"},{"n":"高分优先","v":"S"}]},{"key":"地区","name":"地区","value":[{"n":"全部","v":""},{"n":"中国大陆","v":"中国大陆"},{"n":"香港","v":"香港"},{"n":"台湾","v":"台湾"},{"n":"日本","v":"日本"},{"n":"韩国","v":"韩国"},{"n":"美国","v":"美国"},{"n":"英国","v":"英国"}]},{"key":"年代","name":"年代","value":[{"n":"全部","v":""},{"n":"2026","v":"2026"},{"n":"2025","v":"2025"},{"n":"2024","v":"2024"},{"n":"2023","v":"2023"},{"n":"2022","v":"2022"},{"n":"2021","v":"2021"},{"n":"2020","v":"2020"},{"n":"2019","v":"2019"}]}],"db_anime":[{"key":"sort","name":"排序","value":[{"n":"近期热度","v":"T"},{"n":"首播时间","v":"R"},{"n":"高分优先","v":"S"}]},{"key":"地区","name":"地区","value":[{"n":"全部","v":""},{"n":"日本","v":"日本"},{"n":"中国大陆","v":"中国大陆"},{"n":"韩国","v":"韩国"},{"n":"美国","v":"美国"}]},{"key":"年代","name":"年代","value":[{"n":"全部","v":""},{"n":"2026","v":"2026"},{"n":"2025","v":"2025"},{"n":"2024","v":"2024"},{"n":"2023","v":"2023"},{"n":"2022","v":"2022"},{"n":"2021","v":"2021"},{"n":"2020","v":"2020"},{"n":"2019","v":"2019"}]}],"db_doc":[{"key":"media","name":"内容","value":[{"n":"电影纪录片","v":"movie"},{"n":"剧集纪录片","v":"tv"}]},{"key":"sort","name":"排序","value":[{"n":"近期热度","v":"T"},{"n":"首映时间","v":"R"},{"n":"高分优先","v":"S"}]},{"key":"地区","name":"地区","value":[{"n":"全部","v":""},{"n":"中国大陆","v":"中国大陆"},{"n":"日本","v":"日本"},{"n":"韩国","v":"韩国"},{"n":"美国","v":"美国"},{"n":"英国","v":"英国"}]},{"key":"年代","name":"年代","value":[{"n":"全部","v":""},{"n":"2026","v":"2026"},{"n":"2025","v":"2025"},{"n":"2024","v":"2024"},{"n":"2023","v":"2023"},{"n":"2022","v":"2022"},{"n":"2021","v":"2021"},{"n":"2020","v":"2020"},{"n":"2019","v":"2019"}]}],"db_movie_rank":[{"key":"榜单","name":"榜单","value":[{"n":"实时热门","v":"movie_real_time_hotest"},{"n":"影院热映","v":"movie_showing"},{"n":"即将上映","v":"movie_soon"},{"n":"豆瓣高分","v":"movie_classic"}]}],"db_tv_rank":[{"key":"榜单","name":"榜单","value":[{"n":"实时热门","v":"tv_real_time_hotest"},{"n":"全球口碑榜","v":"tv_global_best_weekly"},{"n":"华语口碑榜","v":"tv_chinese_best_weekly"}]}]}}
+</script>
+
+<script>
+(function(){'use strict';
+/* ============ 0. 配置 ============ */
+var DOUBAN_SOURCE = JSON.parse(document.getElementById('doubanSource').textContent);
+var CLS = DOUBAN_SOURCE.classes, FILTERS = DOUBAN_SOURCE.filters || {};
+/* 可选：自定义豆瓣接口服务地址（frodo/豆瓣兼容格式）。留空则使用内置 TMDB 数据引擎。
+   若填写，页面会优先请求 {CUSTOM_API}/douban/{handler}?参数 ，请求失败自动回退 TMDB。 */
+var CUSTOM_API = '';
+var TMDB = { apiKey:'304ca56b1b7b57ca7a47d9b59946be94', apiBase:'https://api.tmdb.org/3', lang:'zh-CN', img:'https://image.tmdb.org/t/p/w342', big:'https://image.tmdb.org/t/p/w780', back:'https://image.tmdb.org/t/p/w1280' };
+var PAN_API = 'https://so.252035.xyz';
+var PAN_PROXY = ''; /* 可选：网盘搜索的跨域代理前缀（如 https://corsproxy.io 之类），浏览器预览被网络拦截时可用 */
+var PAN_TYPES = ['quark','aliyun','baidu','uc','tianyi','xunlei','123','115','mobile','guangya','magnet','ed2k'];
+var PAN_LABEL = {quark:'夸克',aliyun:'阿里',baidu:'百度',uc:'UC',tianyi:'天翼',xunlei:'迅雷','123':'123盘',115:'115',mobile:'移动',guangya:'光韵',magnet:'磁力',ed2k:'电驴'};
+var GENRES = {'剧情':18,'喜剧':35,'爱情':10749,'动作':28,'科幻':878,'动画':16,'悬疑':9648,'犯罪':80,'恐怖':27,'奇幻':14,'纪录片':99,'冒险':12,'历史':36,'战争':10752,'儿童':10762,'惊悚':53,'家庭':10751,'音乐':10402,'歌舞':10402,'运动':10770,'西部':37,'真人秀':10764,'古装':36,'武侠':28,'灾难':53,'传记':36,'短片':18};
+var COUNTRIES = {'中国大陆':'CN','香港':'HK','台湾':'TW','日本':'JP','韩国':'KR','美国':'US','英国':'GB','泰国':'TH','法国':'FR','德国':'DE','意大利':'IT','西班牙':'ES','印度':'IN','俄罗斯':'RU','加拿大':'CA','澳大利亚':'AU','瑞典':'SE','巴西':'BR','丹麦':'DK'};
+var NAV = [
+ {label:'首页', view:'home'},
+ {label:'电影', cls:'db_movie'},
+ {label:'剧集', cls:'db_tv'},
+ {label:'综艺', cls:'db_show'},
+ {label:'动漫', cls:'db_anime'},
+ {label:'纪录片', cls:'db_doc'},
+ {label:'榜单', cls:'db_movie_rank'},
+ {label:'收藏', view:'favs'}
+];
+var K_FAV='cinema4k_favs_v1', K_PLAY='cinema4k_plays_v1', K_PUSHART='cinema4k_pushart_v1';
+/* 统一存储：localStorage 同步读写（WebView 持久化）+ 壳子内 fm.cache 异步双写（App Prefers 跨 origin 保留） */
+function storeSet(k,v){ try{ localStorage.setItem(k,v) }catch(e){} fmReady().then(function(fm){ if(fm&&fm.cache&&fm.cache.set){ try{ fm.cache.set(k,String(v),'webhome').catch(function(){}) }catch(e){} } }); }
+function storeGet(k){ try{ return localStorage.getItem(k) }catch(e){ return null } }
+function storeDel(k){ try{ localStorage.removeItem(k) }catch(e){} fmReady().then(function(fm){ if(fm&&fm.cache&&fm.cache.del){ try{ fm.cache.del(k,'webhome').catch(function(){}) }catch(e){} } }); }
+
+/* ============ 1. 状态 ============ */
+var state = { view:'home', cls:'db_movie', sel:{}, page:1, totalPages:1, loading:false, listType:'movie', activeItem:null, activeTab:'简介', detailCache:null, panList:[], panType:'', panAuto:false, favs:[], plays:[] };
+
+/* ============ 2. 工具 ============ */
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function cleanStr(s){return String(s||'').replace(/[《》\[\]【】]/g,'').replace(/[(（].*?[)）]/g,'').trim()}
+function toast(t){var e=$('toast');e.textContent=t;e.classList.add('show');clearTimeout(window.__t);window.__t=setTimeout(function(){e.classList.remove('show')},1500)}
+
+/* ============ 3. 壳子桥接（FongMi WebHome / 蜂米电视版） ============ */
+window.WEBHOME_PAGE_OPENED_AT = Date.now();
+if (window.fongmiBridge) document.documentElement.classList.add('fm-native');
+var FM=null, FM_P=null, SHELL_SITE_NAME='', SHELL_DRIVE_CHECK=true, SHELL_CONFIG_DESC='';
+function fmReady(){
+  if(FM) return Promise.resolve(FM);
+  if(FM_P) return FM_P;
+  FM_P=new Promise(function(res){
+    function finish(){ if(window.fm){FM=window.fm} res(FM); }
+    if(window.fm){ finish(); return; }
+    if(window.fongmiBridge){
+      window.addEventListener('fmsdk', finish);
+      setTimeout(finish, 8000);
+    } else setTimeout(finish, 250);
+  });
+  return FM_P;
+}
+function isShell(){ return !!window.fm }
+/* 浏览器侧请求：失败自动退避重试 3 次（目标接口偶发抖动），pan 类请求支持代理前缀 */
+function browserFetch(url, opts, n){
+  n = n||0;
+  var ac = (typeof AbortController!=='undefined') ? new AbortController() : null;
+  var t = setTimeout(function(){ if(ac) ac.abort() }, (opts.timeout||18)*1000);
+  return fetch(url, {method:opts.method||'GET', headers:opts.headers||{}, body:opts.body, signal:ac?ac.signal:undefined}).then(function(r){
+    clearTimeout(t);
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    var ct=r.headers.get('content-type')||'';
+    return ct.indexOf('json')>=0 ? r.json() : r.text();
+  }, function(e){
+    clearTimeout(t);
+    if(n < 2) return new Promise(function(res, rej){
+      setTimeout(function(){ browserFetch(url, opts, n+1).then(res, rej) }, 450*(n+1));
+    });
+    throw e;
+  });
+}
+/* 请求：壳子内走 fm.req（绕过 CORS），浏览器走 fetch */
+function apiReq(url, opts){
+  opts = opts||{};
+  var target = url;
+  if(opts.pan && PAN_PROXY) target = PAN_PROXY.replace(/\/+$/,'') + '/?url=' + encodeURIComponent(url);
+  return fmReady().then(function(fm){
+    if(fm && fm.req){
+      return fm.req(target, {method:opts.method||'GET', headers:opts.headers||{}, body:opts.body, responseType:opts.responseType||'text', timeout:opts.timeout||18}).then(function(r){
+        if(r && r.error) throw new Error(r.error);
+        if(r && r.ok===false) throw new Error('HTTP '+(r.status||0));
+        var b = r && r.body;
+        if(typeof b==='string'){ try{ return JSON.parse(b) }catch(e){ return b } }
+        return b;
+      });
+    }
+    return browserFetch(target, opts);
+  });
+}
+
+/* ============ 4. 数据适配器 ============ */
+function clsById(id){ for(var i=0;i<CLS.length;i++) if(CLS[i].id===id) return CLS[i]; return {id:id,name:id,handler:''} }
+function genreId(name){
+  if(!name||name==='全部'||name==='全部电影'||name==='全部剧集'||name==='不限'||name==='电影'||name==='电视剧'||name==='综艺') return '';
+  return GENRES[name]||'';
+}
+function applySort(s, kind, p){
+  if(s==='R') p.sort_by = kind==='tv'?'first_air_date.desc':'primary_release_date.desc';
+  else if(s==='S'){ p.sort_by='vote_average.desc'; p.vote_count.gte='200'; }
+  else p.sort_by='popularity.desc';
+}
+function applyArea(a, p){
+  if(!a||a==='全部'||a==='全部地区'||a==='') return;
+  if(a==='华语') p.with_original_language='zh';
+  else if(a==='欧美') p.with_origin_country='US|GB|FR|DE|CA|AU|ES|IT';
+  else if(a==='国外') return;
+  else if(COUNTRIES[a]) p.with_origin_country=COUNTRIES[a];
+}
+function applyYear(y, kind, p){
+  if(!y||y==='全部'||y==='全部年代'||y==='') return;
+  var g=kind==='tv'?'first_air_date':'primary_release_date', n;
+  if(/^(\d{2})年代$/.test(y)){ n=parseInt(y,10)+1900; p[g+'.gte']=n+'-01-01'; p[g+'.lte']=(n+9)+'-12-31'; }
+  else if(/^(\d{4})年代$/.test(y)){ n=parseInt(y,10); p[g+'.gte']=n+'-01-01'; p[g+'.lte']=(n+9)+'-12-31'; }
+  else if(y==='更早'){ p[g+'.lte']='1979-12-31'; }
+  else { n=parseInt(y,10); if(n){ p[g+'.gte']=n+'-01-01'; p[g+'.lte']=n+'-12-31'; } }
+}
+/* 片库 handler → TMDB 请求 */
+function buildListReq(clsId, sel, page){
+  var P=sel||{}, out={path:'', params:{}};
+  function add(k,v){ if(v!=null&&v!=='') out.params[k]=v }
+  switch(clsId){
+    case 'db_trend':{
+      var t=P['db_sort']||'';
+      if(t==='db_movie') out.path='/movie/popular';
+      else if(t==='db_tv_cn'){ out.path='/discover/tv'; add('with_origin_country','CN'); add('sort_by','popularity.desc'); }
+      else if(t==='db_tv_us'){ out.path='/discover/tv'; add('with_origin_country','US'); add('sort_by','popularity.desc'); }
+      else if(t==='db_variety'){ out.path='/discover/tv'; add('with_genres','10764'); add('sort_by','popularity.desc'); }
+      else out.path='/trending/all/week';
+      break;
+    }
+    case 'db_hot_movie':{
+      out.path='/discover/movie';
+      var s=P['sort']||'recommend';
+      add('sort_by', s==='recommend'?'popularity.desc': s==='time'?'primary_release_date.desc':'vote_average.desc');
+      if(s==='rank') add('vote_count.gte','100');
+      applyArea(P['area'], out.params);
+      break;
+    }
+    case 'db_movie':{
+      out.path='/discover/movie';
+      applySort(P['sort'],'movie',out.params);
+      add('with_genres', genreId(P['类型']));
+      applyArea(P['地区'], out.params);
+      applyYear(P['年代'],'movie',out.params);
+      break;
+    }
+    case 'db_tv_hot':{
+      var t2=P['type']||'tv_hot';
+      if(t2==='tv_hot') out.path='/trending/tv/week';
+      else { out.path='/discover/tv'; add('sort_by','popularity.desc');
+        if(t2==='tv_domestic') add('with_origin_country','CN');
+        else if(t2==='tv_american') add('with_origin_country','US');
+        else if(t2==='tv_japanese') add('with_origin_country','JP');
+        else if(t2==='tv_korean') add('with_origin_country','KR');
+      }
+      break;
+    }
+    case 'db_tv':{
+      out.path='/discover/tv';
+      applySort(P['sort'],'tv',out.params);
+      add('with_genres', genreId(P['类型']));
+      applyArea(P['地区'], out.params);
+      applyYear(P['年代'],'tv',out.params);
+      break;
+    }
+    case 'db_show':{
+      out.path='/discover/tv';
+      add('with_genres','10764');
+      applySort(P['sort'],'tv',out.params);
+      applyArea(P['地区'], out.params);
+      applyYear(P['年代'],'tv',out.params);
+      break;
+    }
+    case 'db_anime':{
+      out.path='/discover/tv';
+      add('with_genres','16');
+      applySort(P['sort'],'tv',out.params);
+      applyArea(P['地区'], out.params);
+      applyYear(P['年代'],'tv',out.params);
+      break;
+    }
+    case 'db_doc':{
+      var media=P['media']||'movie', kind = media==='tv'?'tv':'movie';
+      out.path = media==='tv' ? '/discover/tv' : '/discover/movie';
+      add('with_genres','99');
+      applySort(P['sort'],kind,out.params);
+      applyArea(P['地区'], out.params);
+      applyYear(P['年代'],kind,out.params);
+      break;
+    }
+    case 'db_movie_rank':{
+      var r=P['榜单']||'movie_real_time_hotest';
+      if(r==='movie_showing') out.path='/movie/now_playing';
+      else if(r==='movie_soon') out.path='/movie/upcoming';
+      else if(r==='movie_classic') out.path='/movie/top_rated';
+      else out.path='/movie/popular';
+      break;
+    }
+    case 'db_tv_rank':{
+      var r2=P['榜单']||'tv_real_time_hotest';
+      if(r2==='tv_global_best_weekly'){ out.path='/discover/tv'; add('sort_by','vote_average.desc'); add('vote_count.gte','200'); add('first_air_date.gte','2020-01-01'); }
+      else if(r2==='tv_chinese_best_weekly'){ out.path='/discover/tv'; add('sort_by','vote_average.desc'); add('with_origin_country','CN'); add('vote_count.gte','100'); add('first_air_date.gte','2020-01-01'); }
+      else out.path='/tv/popular';
+      break;
+    }
+  }
+  return out;
+}
+function tmdbUrl(path, params, page){
+  var u = new URL(TMDB.apiBase + path);
+  u.searchParams.set('api_key', TMDB.apiKey);
+  u.searchParams.set('language', TMDB.lang);
+  if(page) u.searchParams.set('page', page);
+  for(var k in params||{}) if(params[k]!=null && params[k]!=='') u.searchParams.set(k, params[k]);
+  return u.toString();
+}
+function normTmdb(r, mtype){
+  var mt = mtype || (r.media_type==='tv'?'tv': r.media_type==='movie'?'movie': (r.name&&!r.title?'tv':'movie'));
+  return { id:r.id, mediaType:mt, title:r.title||r.name||'', year:(r.release_date||r.first_air_date||'').slice(0,4), rate:r.vote_average||0,
+    poster: r.poster_path? TMDB.img+r.poster_path : '', back: r.backdrop_path? TMDB.back+r.backdrop_path : '', overview:r.overview||'' };
+}
+/* 自定义豆瓣接口（可选）：GET {CUSTOM_API}/douban/{handler}?page=&sort=&类型=&地区=&年代=&榜单=…
+   返回格式：{list:[{id,title,year,rate,image,overview}], total} 或 {data:[...]} / {results:[...]} */
+function buildCustomReq(clsId, sel, page){
+  var cls=clsById(clsId), qs=['page='+page];
+  for(var k in sel||{}) if(sel[k]) qs.push(encodeURIComponent(k)+'='+encodeURIComponent(sel[k]));
+  return CUSTOM_API.replace(/\/+$/,'')+'/douban/'+(cls.handler||clsId)+'?'+qs.join('&');
+}
+function normCustom(resp){
+  var arr = (resp&&resp.list)||(resp&&resp.data)||(resp&&resp.results)||(resp&&resp.items)||[];
+  if(arr && !Array.isArray(arr) && arr.list) arr=arr.list;
+  if(!Array.isArray(arr)) arr=[];
+  return arr.map(function(it){
+    var rv = it.rating||{};
+    return { id:it.id||it.vod_id||it.douban_id||'', mediaType: it.type==='tv'?'tv':(it.vod_type==='tv'?'tv':'movie'), title:it.title||it.name||it.vod_name||'',
+      year: it.year||(it.pubdate||'').slice(0,4), rate: it.rate||it.vote||it.score||rv.value||0,
+      poster: it.image||it.cover||it.pic||(rv.cover_url)||(it.cover&&it.cover.url)||'', back: it.backdrop||it.background||'', overview: it.overview||it.desc||it.vod_content||'' };
+  });
+}
+function fetchList(clsId, sel, page){
+  if(CUSTOM_API){
+    return apiReq(buildCustomReq(clsId, sel, page), {responseType:'json', timeout:20}).then(function(d){
+      return { list: normCustom(d), totalPages: d&&d.total_pages ? d.total_pages : ((d&&d.total) ? Math.ceil(Number(d.total)/20) : 1) };
+    }).catch(function(){ return fetchTmdbList(clsId, sel, page); });
+  }
+  return fetchTmdbList(clsId, sel, page);
+}
+function fetchTmdbList(clsId, sel, page){
+  var req = buildListReq(clsId, sel, page);
+  return apiReq(tmdbUrl(req.path, req.params, page), {responseType:'json'}).then(function(d){
+    return { list: (d.results||[]).map(function(r){ return normTmdb(r) }), totalPages: d.total_pages||1 };
+  });
+}
+function fetchSearch(q, page){
+  if(CUSTOM_API){
+    return apiReq(CUSTOM_API.replace(/\/+$/,'')+'/douban/search?q='+encodeURIComponent(q)+'&page='+(page||1), {responseType:'json', timeout:20})
+      .then(function(d){ return { list: normCustom(d).filter(function(x){return x.title}), totalPages:1 } })
+      .catch(function(){ return fetchTmdbSearch(q, page); });
+  }
+  return fetchTmdbSearch(q, page);
+}
+function fetchTmdbSearch(q, page){
+  return apiReq(tmdbUrl('/search/multi', {query:q}, page), {responseType:'json'}).then(function(d){
+    return { list: (d.results||[]).filter(function(r){return r.media_type==='movie'||r.media_type==='tv'}).map(function(r){ return normTmdb(r) }), totalPages: d.total_pages||1 };
+  });
+}
+function fetchDetail(item){
+  if(CUSTOM_API){
+    return apiReq(CUSTOM_API.replace(/\/+$/,'')+'/douban/detail?id='+encodeURIComponent(item.id)+'&type='+(item.mediaType||'movie'), {responseType:'json', timeout:20})
+      .then(function(d){ return normDetailCustom(d, item) }).catch(function(){ return null });
+  }
+  var t = item.mediaType==='tv'?'tv':'movie';
+  return apiReq(tmdbUrl('/'+t+'/'+item.id, {append_to_response:'credits,images,similar'}), {responseType:'json'}).then(function(d){ return normDetailTmdb(d, t) }).catch(function(){ return null });
+}
+function normDetailTmdb(d, t){
+  return { overview:d.overview||'', genres:(d.genres||[]).map(function(g){return g.name}),
+    runtime:d.runtime||((d.episode_run_time||[])[0])||'', year:(d.release_date||d.first_air_date||'').slice(0,4), rate:d.vote_average||0,
+    cast:((d.credits&&d.credits.cast)||[]).slice(0,10).map(function(c){return {name:c.name, role:c.character, img:c.profile_path?TMDB.img+c.profile_path:''}}),
+    backdrops:((d.images&&d.images.backdrops)||[]).slice(0,12).map(function(b){return TMDB.back+b.file_path}),
+    similar:((d.similar&&d.similar.results)||[]).slice(0,10).map(function(r){return normTmdb(r, t)}) };
+}
+function normDetailCustom(d, item){
+  var rawCast=(d&&d.cast)||[], rawGenres=(d&&d.genres)||[], rawBd=(d&&d.backdrops)||[];
+  return { overview: (d&&(d.overview||d.desc))||item.overview||'',
+    genres: rawGenres.map(function(g){ return typeof g==='string'?g:(g&&g.name)||'' }).filter(Boolean),
+    runtime: d&&d.runtime||'', year: (d&&d.year)||item.year||'', rate: (d&&(d.rate||d.vote))||item.rate||0,
+    cast: rawCast.map(function(c){ return typeof c==='string'?{name:c,role:''}:{name:(c&&(c.name||c.title))||'', role:(c&&(c.role||c.character))||'', img:(c&&c.img)||(c&&c.image)||''} }).filter(function(c){return c.name}),
+    backdrops: rawBd.map(function(b){ return typeof b==='string'?b:((b&&(b.url||b.file_path))||'') }).filter(Boolean),
+    similar: ((d&&d.similar)||[]).map(function(s){return normCustom([s])[0]||s}) };
+}
+
+/* ============ 5. 网盘资源搜索 ============ */
+var PAN_QUALITY=[{k:['dolby vision','dovi','杜比视界','dv'],s:100},{k:['hdr10+','hdr10plus'],s:90},{k:['hdr10','hdr','hlg'],s:80},{k:['4k','2160p','uhd','8k'],s:70},{k:['remux','蓝光原盘','原盘','bluray','blu-ray'],s:65},{k:['高码率','高码','x265','h265','hevc'],s:55},{k:['杜比全景声','dolby atmos','atmos'],s:50},{k:['1080p','1080i','fhd'],s:40},{k:['60fps','60帧'],s:30},{k:['720p'],s:20},{k:['web-dl','webdl','bdrip'],s:15},{k:['国语','粤语','国粤','中字','双语'],s:5}];
+function panScore(title){ var t=String(title||'').toLowerCase(), s=0; PAN_QUALITY.forEach(function(r){ if(r.k.some(function(k){return t.indexOf(k.toLowerCase())>=0})) s+=r.s; }); return s; }
+function panTags(title){
+  var t=String(title||'').toLowerCase(), tags=[];
+  if(/dolby.?vision|dovi|杜比视界|dv/.test(t)) tags.push('杜比视界');
+  else if(/hdr10\+|hdr10plus/.test(t)) tags.push('HDR10+');
+  else if(/hdr/.test(t)) tags.push('HDR');
+  if(/4k|2160p|uhd|8k/.test(t)) tags.push('4K');
+  if(/remux|蓝光原盘|bluray|blu-ray|原盘/.test(t)) tags.push('蓝光');
+  if(/1080p|1080i/.test(t)) tags.push('1080P');
+  return tags.slice(0,3);
+}
+function searchPan(kw){
+  return apiReq(PAN_API+'/api/search', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({kw:kw,res:'merge',src:'all',cloud_types:PAN_TYPES}), responseType:'json', timeout:20, pan:true}).then(function(d){
+    var byType = (d&&d.data&&d.data.merged_by_type)||(d&&d.merged_by_type)||{};
+    var out=[], seen={};
+    for(var t in byType){
+      if(PAN_TYPES.indexOf(t)<0) continue;
+      (byType[t]||[]).forEach(function(it){
+        var url=it.url||it.share_url||'';
+        if(!url) return;
+        var k=t+'|'+url.replace(/[?&]+$/,'');
+        if(seen[k]) return; seen[k]=1;
+        out.push({type:t, title:cleanStr(it.note||it.title||it.name||kw), url:url, password:it.password||it.pwd||'', date:it.datetime||it.time||''});
+      });
+    }
+    out.forEach(function(x){ x._score=panScore(x.title); });
+    out.sort(function(a,b){ return b._score-a._score; });
+    return out;
+  });
+}
+
+/* ============ 6. 渲染 ============ */
+function card(item, idx, extra){
+  var b=document.createElement('button');
+  b.className='card focus'; b.tabIndex=0;
+  var pill='<span class="cpill">'+(item.mediaType==='tv'?'剧集':'电影')+'</span>'+(item.rate?'<span class="cpill">'+Number(item.rate).toFixed(1)+'</span>':'');
+  var poster = item.poster ? '<img class="pimg" src="'+esc(item.poster)+'" alt="" loading="lazy" onerror="this.remove()">' : '';
+  var prog = (extra && extra.progress!=null) ? '<div class="progress"><i style="width:'+Math.min(100,Math.max(0,extra.progress))+'%"></i></div>' : '';
+  b.innerHTML='<div class="poster p'+(idx%8)+'">'+poster+'</div><div class="ctop">'+pill+'</div><div class="cinfo"><div class="ctitle">'+esc(item.title)+'</div><div class="cmeta">'+[item.year, item.rate?'评分 '+Number(item.rate).toFixed(1):''].filter(Boolean).join(' · ')+'</div></div>'+prog;
+  b.onclick=function(){ openDetail(item) };
+  return b;
+}
+function clearEl(id){ var e=$(id); e.innerHTML=''; return e; }
+function renderRail(id, arr, emptyMsg){
+  var r=$(id); r.innerHTML='';
+  if(!arr.length){ r.innerHTML='<div class="empty" style="padding:20px 0;text-align:left">'+(emptyMsg||'暂无内容')+'</div>'; return; }
+  arr.forEach(function(m,i){ r.appendChild(card(m,i)) });
+}
+
+/* ============ 7. 首页 ============ */
+function showHome(){
+  state.view='home'; setNav();
+  $('homeView').classList.remove('hidden'); $('browseView').classList.add('hidden'); $('favsView').classList.add('hidden');
+  loadHome();
+  loadContinue();
+  setTimeout(function(){ var p=$('heroPlay'); if(p) p.focus(); },60);
+}
+var HOME_LOADED=false;
+function loadHome(){
+  if(HOME_LOADED) return; HOME_LOADED=true;
+  /* 综合热榜 → 英雄位 */
+  fetchList('db_trend', {}, 1).then(function(d){
+    var list=d.list||[];
+    if(list.length) setHero(list[0]);
+    renderRail('pick', list.slice(1,10), '暂无内容');
+  }).catch(function(){ toast('首页数据加载失败') });
+  fetchList('db_hot_movie', {sort:'recommend'}, 1).then(function(d){ renderRail('hot', (d.list||[]).slice(0,10), '暂无内容'); }).catch(function(){});
+  renderQuick();
+  loadContinue();
+}
+function setHero(item){
+  if(item.back) $('heroImg').src=item.back;
+  else if(item.poster) $('heroImg').src=item.poster;
+  $('heroImg').onerror=function(){ this.style.display='none'; };
+  $('heroTitle').textContent=item.title;
+  var parts=[item.year, item.rate?'评分 '+Number(item.rate).toFixed(1):''].filter(Boolean);
+  $('heroMeta').textContent=parts.join(' · ')||' ';
+  $('heroDesc').textContent=item.overview||'暂无简介';
+  $('heroBadges').innerHTML='<span class="badge">'+(item.mediaType==='tv'?'剧集':'电影')+'</span><span class="badge">'+(item.year||'—')+'</span><span class="badge">'+(item.rate?'评分 '+Number(item.rate).toFixed(1):'新片')+'</span>';
+  $('heroPlay').onclick=function(){ openDetail(item); setTimeout(function(){ playFlow() },180); };
+  $('heroDetail').onclick=function(){ openDetail(item) };
+}
+function renderQuick(){
+  var q=[['⌕','搜索影视','快速查找电影、剧集、演员','search'],['▦','分类浏览','按类型、年份、评分浏览','drawer'],['♡','我的收藏','收藏与稍后观看','favs'],['⚙','App 设置','打开壳子内设置','setting']];
+  var box=clearEl('quick');
+  q.forEach(function(x){
+    var b=document.createElement('button'); b.className='quickbtn focus'; b.tabIndex=0;
+    b.innerHTML='<span class="qi">'+x[0]+'</span><span><div class="qt">'+x[1]+'</div><div class="qd">'+x[2]+'</div></span>';
+    b.onclick=function(){
+      if(x[3]==='search') openSearch();
+      else if(x[3]==='drawer') openDrawer();
+      else if(x[3]==='favs') showFavs();
+      else { fmReady().then(function(fm){ if(fm&&fm.openSetting) fm.openSetting(); else toast('请在 App 内使用设置'); }); }
+    };
+    box.appendChild(b);
+  });
+}
+
+/* 继续观看：本地播放记录 + 壳子内 App 历史（含进度） */
+/* App 历史 key 格式 siteKey@@@vodId（官方规范），字段缺失时拆分兜底 */
+function historyKeyParts(it){
+  var key=String(it&&it.key||'');
+  var parts=key.split('@@@');
+  return { key:key, siteKey:it&&it.siteKey||parts[0]||'', vodId:it&&it.vodId||parts[1]||'' };
+}
+function loadContinue(){
+  var r=$('continue'), plays=readPlays();
+  fmReady().then(function(fm){
+    var shellItems=[];
+    if(fm && fm.history){
+      try {
+        return Promise.resolve(fm.history()).then(function(h){
+          (h||[]).forEach(function(it){
+            var hp=historyKeyParts(it);
+            if(!hp.siteKey || !hp.vodId) return;
+            var title=it.vodName||it.title||'';
+            if(!title) return;
+            if(hp.siteKey==='push_agent'){
+              var art=pushArtFor(hp.vodId, title);
+              shellItems.push({title:title, siteKey:hp.siteKey, vodId:hp.vodId, pic:(art&&art.pic)||it.vodPic||it.pic||'', wallPic:(art&&art.wallPic)||it.wallPic||'', progress:Number(it.position||it.progress||0), isPush:true});
+            } else {
+              shellItems.push({title:title, siteKey:hp.siteKey, vodId:hp.vodId, pic:it.vodPic||it.pic||'', wallPic:it.wallPic||'', progress:Number(it.position||it.progress||0), isPush:false});
+            }
+          });
+          return shellItems;
+        }).catch(function(){ return []; });
+      } catch(e){ return []; }
+    }
+    return [];
+  }).then(function(shellItems){
+    var locals=plays.slice(0,8);
+    r.innerHTML='';
+    if(!locals.length && !shellItems.length){ $('continueSub').textContent='还没有观看记录'; r.innerHTML='<div class="empty" style="padding:20px 0;text-align:left">去首页或分类里挑一部开始看吧</div>'; return; }
+    $('continueSub').textContent= shellItems.length?'App 观看历史 · 自动同步':'接着上次的位置继续';
+    locals.forEach(function(m,i){
+      var b=card(m,i,{});
+      b.onclick=function(){ openDetail(m) };
+      r.appendChild(b);
+    });
+    shellItems.forEach(function(s,i){
+      var b=card({title:s.title, pic:s.pic, mediaType:'', year:'', rate:''}, i, {progress:s.progress});
+      b.onclick=function(){
+        fmReady().then(function(fm){
+          if(s.isPush){ if(fm&&fm.play){ fm.play(s.vodId, s.title, {pic:s.pic, wallPic:s.wallPic}); return; } }
+          else if(fm&&fm.vod){ fm.vod(s.siteKey, s.vodId, s.title, s.pic); return; }
+          toast('App 历史仅可在壳子内续播');
+        });
+      };
+      r.appendChild(b);
+    });
+  });
+}
+
+/* ============ 8. 分类浏览页 ============ */
+function showBrowse(clsId){
+  state.view='browse'; state.cls=clsId; state.sel=selFromDefaults(clsId); state.page=1; state.totalPages=1;
+  setNav();
+  $('homeView').classList.add('hidden'); $('favsView').classList.add('hidden'); $('browseView').classList.remove('hidden');
+  var v=$('browseView'); v.scrollTop=0;
+  renderBrowseHead(); renderFilters(); loadBrowse(1, true);
+  setTimeout(function(){ var c=document.querySelector('#browseView .chip.active'); if(c) c.focus(); },80);
+}
+function selFromDefaults(clsId){
+  var cls=clsById(clsId), s={};
+  if(cls.defaults){ for(var k in cls.defaults) s[k]=cls.defaults[k]; }
+  return s;
+}
+function renderBrowseHead(){
+  var cls=clsById(state.cls);
+  $('bTitle').textContent=cls.name||state.cls;
+  $('bSub').textContent= handlerNote(state.cls);
+  $('bCount').textContent='';
+}
+function handlerNote(clsId){
+  var map={db_trend:'综合热度榜', db_hot_movie:'豆瓣热门电影', db_movie:'按类型 / 地区 / 年代浏览', db_tv_hot:'热播剧集榜单', db_tv:'按类型 / 地区 / 年代浏览', db_show:'热门综艺节目', db_anime:'热门动漫番剧', db_doc:'纪录片精选', db_movie_rank:'豆瓣电影榜单', db_tv_rank:'豆瓣剧集榜单'};
+  return map[clsId]||'';
+}
+function renderFilters(){
+  var box=clearEl('bFilters'), groups=(FILTERS[state.cls]||[]).slice();
+  /* 榜单页额外提供 电影榜单/剧集榜单 切换 */
+  if(state.cls==='db_movie_rank'||state.cls==='db_tv_rank'){
+    groups=[{key:'__list', name:'类型', value:[{n:'电影榜单',v:'movie'},{n:'剧集榜单',v:'tv'}]}].concat(groups);
+  }
+  groups.forEach(function(g){
+    var row=document.createElement('div'); row.className='frow';
+    var nm=document.createElement('span'); nm.className='fname'; nm.textContent=g.name; row.appendChild(nm);
+    g.value.forEach(function(o){
+      var c=document.createElement('button'); c.className='chip focus'; c.tabIndex=0; c.textContent=o.n;
+      var active;
+      if(g.key==='__list') active = (state.cls==='db_movie_rank'&&o.v==='movie')||(state.cls==='db_tv_rank'&&o.v==='tv');
+      else active = (state.sel[g.key]==null ? o.v==='' : String(state.sel[g.key])===String(o.v));
+      if(active) c.classList.add('active');
+      c.onclick=function(){
+        if(g.key==='__list'){ showBrowse(o.v==='tv'?'db_tv_rank':'db_movie_rank'); return; }
+        state.sel[g.key]=o.v; state.page=1;
+        renderFilters(); loadBrowse(1, true);
+        c.focus();
+      };
+      row.appendChild(c);
+    });
+    box.appendChild(row);
+  });
+}
+function loadBrowse(page, reset){
+  if(state.loading) return; state.loading=true;
+  var grid=$('bGrid'), more=$('bMore'), empty=$('bEmpty');
+  if(reset){ grid.innerHTML=''; more.style.display='none'; empty.classList.add('hidden'); }
+  if(page===1 && !grid.children.length){ grid.innerHTML='<div class="empty">正在加载…</div>'; }
+  fetchList(state.cls, state.sel, page).then(function(d){
+    state.loading=false;
+    var list=d.list||[];
+    if(reset) grid.innerHTML='';
+    list.forEach(function(m,i){ grid.appendChild(card(m,i)) });
+    state.totalPages=d.totalPages||1; state.page=page;
+    if(grid.querySelector('.empty') && list.length) grid.querySelector('.empty').remove();
+    if(!grid.children.length){ empty.textContent='没有找到符合条件的影片，试试调整筛选'; empty.classList.remove('hidden'); }
+    more.style.display = (page<state.totalPages) ? 'block' : 'none';
+    $('bCount').textContent = list.length?('第 '+page+' 页'):'';
+    if(reset && grid.children.length){ var c=grid.querySelector('.card'); if(c) c.focus(); }
+  }).catch(function(){
+    state.loading=false;
+    if(reset){ grid.innerHTML='<div class="empty"><button class="morebtn focus" id="bRetry" tabindex="0">加载失败，点击重试</button></div>'; $('bRetry').onclick=function(){ loadBrowse(1,true); }; }
+    else toast('加载失败');
+  });
+}
+$('bMore').onclick=function(){ if(!state.loading) loadBrowse(state.page+1, false); };
+
+/* ============ 9. 收藏 ============ */
+function readFavs(){ try{ return JSON.parse(localStorage.getItem(K_FAV)||'[]') }catch(e){ return [] } }
+function writeFavs(v){ storeSet(K_FAV, JSON.stringify(v)) }
+function isFav(item){ return readFavs().some(function(f){ return f.id===item.id && f.mediaType===(item.mediaType||'') }) }
+function toggleFav(item){
+  var favs=readFavs();
+  var i=favs.findIndex(function(f){ return f.id===item.id && f.mediaType===(item.mediaType||'') });
+  if(i>=0){ favs.splice(i,1); toast('已取消收藏'); }
+  else { favs.unshift({id:item.id, mediaType:item.mediaType||'movie', title:item.title, year:item.year, rate:item.rate, pic:item.poster, back:item.back}); toast('已加入收藏'); }
+  writeFavs(favs); updateFavBtn(item);
+}
+function updateFavBtn(item){
+  var b=$('fav');
+  if(isFav(item)){ b.textContent='✓ 已收藏'; } else b.textContent='＋ 收藏';
+}
+function showFavs(){
+  state.view='favs'; setNav();
+  $('homeView').classList.add('hidden'); $('browseView').classList.add('hidden'); $('favsView').classList.remove('hidden');
+  var grid=clearEl('favGrid'), favs=readFavs(), empty=$('favEmpty');
+  empty.style.display = favs.length?'none':'block';
+  favs.forEach(function(m,i){ grid.appendChild(card(m,i)) });
+  setTimeout(function(){ var c=grid.querySelector('.card'); if(c) c.focus(); },60);
+}
+
+/* ============ 10. 搜索 ============ */
+var searchTimer=null;
+function openSearch(){
+  $('search').classList.add('open');
+  $('searchInput').value=''; clearEl('results');
+  fmReady().then(function(fm){ $('nativeSearchBtn').style.display=(fm&&fm.search)?'block':'none'; });
+  setTimeout(function(){ $('searchInput').focus() },60);
+}
+function closeSearch(){ $('search').classList.remove('open'); }
+function runSearch(q){
+  q=(q||'').trim();
+  if(!q){ clearEl('results'); return; }
+  clearEl('results').innerHTML='<div class="empty">正在搜索…</div>';
+  fetchSearch(q,1).then(function(d){
+    var box=clearEl('results');
+    var list=d.list||[];
+    if(!list.length){ box.innerHTML='<div class="empty">没有找到「'+esc(q)+'」相关内容</div>'; return; }
+    list.slice(0,24).forEach(function(m,i){ box.appendChild(card(m,i)) });
+  }).catch(function(){ clearEl('results').innerHTML='<div class="empty">搜索失败，请稍后重试</div>'; });
+}
+$('searchInput').addEventListener('input',function(){ var v=this.value; clearTimeout(searchTimer); searchTimer=setTimeout(function(){ runSearch(v) },350); });
+$('searchInput').addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); runSearch(this.value); } });
+$('nativeSearchBtn').onclick=function(){ fmReady().then(function(fm){ if(fm&&fm.search) fm.search($('searchInput').value.trim(), {direct:false}); else toast('当前环境不支持原生搜索'); }); };
+
+/* ============ 11. 详情 ============ */
+var DETAIL_ENRICH={};
+function openDetail(item){
+  state.activeItem=item; state.activeTab='简介'; state.detailCache=null; DETAIL_ENRICH={};
+  $('detail').classList.add('open');
+  if(item.back) $('detailImg').src=item.back; else if(item.poster) $('detailImg').src=item.poster;
+  $('detailImg').onerror=function(){ this.style.display='none'; };
+  $('dkicker').textContent = (item.mediaType==='tv'?'FEATURED TV · 剧集':'FEATURED MOVIE · 电影');
+  $('dtitle').textContent=item.title||'';
+  $('dmeta').textContent=[item.year, item.rate?('评分 '+Number(item.rate).toFixed(1)):'', item.mediaType==='tv'?'剧集':'电影'].filter(Boolean).join(' · ');
+  $('ddesc').textContent=item.overview||'暂无简介';
+  updateFavBtn(item);
+  closeRespanel(true);
+  renderTabs();
+  renderTab();
+  fetchDetail(item).then(function(d){
+    DETAIL_ENRICH=d||{};
+    if(d&&d.overview) $('ddesc').textContent=d.overview;
+    if(d&&(d.year||d.rate)) $('dmeta').textContent=[d.year||item.year, d.rate?('评分 '+Number(d.rate).toFixed(1)):(item.rate?('评分 '+Number(item.rate).toFixed(1)):''), (d.genres&&d.genres.length?d.genres.join(' / '):''), d.runtime?d.runtime+' 分钟':''].filter(Boolean).join(' · ');
+    if(state.activeTab!=='简介') renderTab();
+  });
+  setTimeout(function(){ $('dplay').focus() },60);
+}
+function closeDetail(){ $('detail').classList.remove('open'); }
+function renderTabs(){
+  var box=clearEl('dtabs'), tabs=['简介','演职员','剧照','推荐'];
+  tabs.forEach(function(t,i){
+    var b=document.createElement('button'); b.className='dtab focus'+(t===state.activeTab?' active':''); b.tabIndex=0; b.textContent=t;
+    b.onclick=function(){ state.activeTab=t; renderTabs(); renderTab(); b.focus(); };
+    box.appendChild(b);
+  });
+}
+function renderTab(){
+  var box=$('dtinfo'), d=DETAIL_ENRICH||{};
+  box.classList.remove('hidden');
+  if(state.activeTab==='简介'){
+    box.innerHTML='<div>'+(esc((state.activeItem&&state.activeItem.overview)||d.overview||'暂无简介'))+'</div>'+(d.cast&&d.cast.length?'<div class="castline">'+d.cast.slice(0,8).map(function(c){return '<span class="casttag">'+esc(c.name)+' · '+esc(c.role||'')+'</span>'}).join('')+'</div>':'');
+  } else if(state.activeTab==='演职员'){
+    box.innerHTML = (d.cast&&d.cast.length)?('<div class="castline">'+d.cast.map(function(c){return '<span class="casttag">'+esc(c.name)+(c.role?' · '+esc(c.role):'')+'</span>'}).join('')+'</div>'):'<div class="empty">暂无演职员信息</div>';
+  } else if(state.activeTab==='剧照'){
+    box.innerHTML = (d.backdrops&&d.backdrops.length)?('<div class="shotsrow">'+d.backdrops.map(function(s){return '<img class="shot" src="'+esc(s)+'" alt="" loading="lazy">'}).join('')+'</div>'):'<div class="empty">暂无剧照</div>';
+  } else if(state.activeTab==='推荐'){
+    box.innerHTML='<div class="simrow"></div>';
+    var row=box.querySelector('.simrow');
+    if(d.similar&&d.similar.length){
+      d.similar.forEach(function(s,i){
+        var b=document.createElement('button'); b.className='simcard focus'; b.tabIndex=0;
+        b.innerHTML=(s.poster?'<img src="'+esc(s.poster)+'" alt="" loading="lazy">':'<div class="poster p'+(i%8)+'"></div>')+'<div class="st">'+esc(s.title)+'</div>';
+        b.onclick=function(){ openDetail(s) };
+        row.appendChild(b);
+      });
+    } else row.innerHTML='<div class="empty">暂无推荐</div>';
+  }
+}
+
+/* ============ 12. 播放流程（网盘搜索 → 壳子播放） ============ */
+function playFlow(){
+  var item=state.activeItem; if(!item) return;
+  addPlayRecord(item);
+  var kw=cleanStr(item.title);
+  openRespanel();
+  setResStatus('正在搜索网盘资源…');
+  state.panAuto=true;
+  searchPan(kw).then(function(list){
+    state.panList=list;
+    if(!list.length){ setResStatus('未找到网盘资源，可试试原生搜索', false, true); renderResTabs([]); return; }
+    if(!list.some(function(x){return x.type===state.panType})) state.panType=list[0].type;
+    renderResTabs(list); renderResList(state.panType||list[0].type);
+    toast('已为你播放最佳资源');
+    setTimeout(function(){ if(state.panList.length) playRes(state.panList[0], item.title) },350);
+  }).catch(function(){ setResStatus('资源搜索失败，可重试或试试原生搜索', true, true); renderResTabs([]); });
+}
+function openRespanel(){
+  $('respanel').classList.remove('hidden');
+  $('resSub').textContent = SHELL_SITE_NAME ? ('当前片源：'+SHELL_SITE_NAME+' · 可用原生搜索') : (SHELL_CONFIG_DESC ? ('片源配置：'+SHELL_CONFIG_DESC) : '');
+}
+function closeRespanel(force){
+  if(force===true){ $('respanel').classList.add('hidden'); return; }
+  $('respanel').classList.add('hidden');
+}
+function setResStatus(t, withRetry, withFallback){
+  var h='<div class="rstatus">'+esc(t)+'</div>';
+  if(withRetry) h+='<div style="text-align:center;margin-top:6px"><button class="rtab focus" id="resRetry" tabindex="0">重试</button></div>';
+  if(withFallback){
+    h+='<div class="rfallback"><button class="rtab focus" id="resNative" tabindex="0">原生搜索</button><button class="rtab focus" id="resOpenVod" tabindex="0">打开 App 影视</button></div>';
+  }
+  $('reslist').innerHTML=h;
+  $('restabs').innerHTML='';
+  var rb=$('resRetry'); if(rb) rb.onclick=playFlow;
+  var rn=$('resNative'); if(rn) rn.onclick=function(){
+    fmReady().then(function(fm){
+      var t=(state.activeItem&&state.activeItem.title)?state.activeItem.title:'';
+      if(fm&&fm.search){ fm.search(t,{direct:false}); return; }
+      toast('当前环境不支持原生搜索');
+    });
+  };
+  var rv=$('resOpenVod'); if(rv) rv.onclick=function(){
+    fmReady().then(function(fm){ if(fm&&fm.openVod) fm.openVod(); else toast('请在 App 内使用'); });
+  };
+}
+function renderResTabs(list){
+  var types=[], seen={};
+  list.forEach(function(x){ if(!seen[x.type]){ seen[x.type]=1; types.push(x.type); } });
+  var box=clearEl('restabs');
+  types.forEach(function(t){
+    var b=document.createElement('button'); b.className='rtab focus'+(t===state.panType?' active':''); b.tabIndex=0;
+    b.textContent=(PAN_LABEL[t]||t)+' '+list.filter(function(x){return x.type===t}).length;
+    b.onclick=function(){ state.panType=t; renderResTabs(list); renderResList(t); b.focus(); };
+    box.appendChild(b);
+  });
+  $('resSub').textContent='共 '+list.length+' 个资源 · '+(SHELL_SITE_NAME?('片源 '+SHELL_SITE_NAME):'点击播放');
+}
+/* 壳子原生网盘检测：给资源列表加有效性圆点（ok 绿 / bad 红 / locked 黄 / uncertain 灰） */
+var PAN_CHECK_TYPES={quark:1,aliyun:1,baidu:1,uc:1,tianyi:1,xunlei:1,'123':1,115:1,mobile:1};
+function checkPanHealth(list){
+  if(!list || !list.length) return;
+  fmReady().then(function(fm){
+    if(!fm || !fm.pan || !fm.pan.check) return;
+    if(SHELL_DRIVE_CHECK===false) return;
+    var items=[], idxs=[];
+    list.forEach(function(p,i){
+      if(items.length>=10) return;
+      if(!PAN_CHECK_TYPES[p.type]) return;
+      items.push({type:p.type, url:p.url, password:p.password||''}); idxs.push(i);
+    });
+    if(!items.length) return;
+    fm.pan.check(items).then(function(r){
+      var res=r&&r.results||[];
+      var els=document.querySelectorAll('#reslist .ritem');
+      res.forEach(function(rs,j){
+        var idx=idxs[j];
+        if(!rs || !rs.state || idx==null) return;
+        var el=els[idx];
+        if(!el) return;
+        var dot=el.querySelector('.rdot');
+        if(dot){
+          if(rs.state==='ok') dot.className='rdot r-ok';
+          else if(rs.state==='bad'){ dot.className='rdot r-bad'; el.style.opacity='.4'; }
+          else if(rs.state==='locked') dot.className='rdot r-locked';
+          else dot.className='rdot r-unc';
+        }
+      });
+    }).catch(function(){});
+  });
+}
+function renderResList(type){
+  var box=clearEl('reslist'), list=state.panList.filter(function(x){return x.type===type});
+  if(!list.length){ box.innerHTML='<div class="rstatus">该类型暂无资源</div>'; return; }
+  list.forEach(function(p){
+    var b=document.createElement('button'); b.className='ritem focus'; b.tabIndex=0;
+    var tags=panTags(p.title);
+    b.innerHTML='<div class="rline"><span class="rdot"></span><span class="rname">'+esc(p.title)+'</span>'+(tags.length?'<span class="rtags">'+tags.map(function(t){return '<span class="rtag">'+esc(t)+'</span>'}).join('')+'</span>':'')+'</div><div class="rmeta">'+esc(PAN_LABEL[p.type]||p.type)+(p.password?' · 提取码 '+esc(p.password):'')+(p.date&&p.date.indexOf('0001')<0?' · '+esc(String(p.date).slice(0,10)):'')+'</div>';
+    b.onclick=function(){ playRes(p, state.activeItem?state.activeItem.title:'') };
+    box.appendChild(b);
+  });
+  checkPanHealth(list);
+}
+function addPlayRecord(item){
+  var plays=readPlays();
+  plays=plays.filter(function(x){ return !(x.id===item.id && x.mediaType===(item.mediaType||'')) });
+  plays.unshift({id:item.id, mediaType:item.mediaType||'movie', title:item.title, year:item.year, rate:item.rate, pic:item.poster, at:Date.now()});
+  if(plays.length>30) plays.length=30;
+  storeSet(K_PLAY, JSON.stringify(plays));
+}
+function readPlays(){ try{ return JSON.parse(localStorage.getItem(K_PLAY)||'[]') }catch(e){ return [] } }
+/* 推送播放海报缓存：播放前按 URL 存 {title,pic,wallPic}，供 fm.history() push_agent 记录恢复 */
+function pushArtKey(url){ return String(url||'').replace(/^push:\/\//i,''); }
+function savePushArtwork(p, title, pic, wallPic){
+  var u=pushArtKey(p&&p.url);
+  if(!u) return;
+  var all={}; try{ var old=JSON.parse(localStorage.getItem(K_PUSHART)||'null'); if(old&&old.items) all=old.items; }catch(e){}
+  all[u]={title:title||'', pic:pic||'', wallPic:wallPic||'', at:Date.now()};
+  var keys=Object.keys(all).sort(function(a,b){ return Number(all[b]&&all[b].at||0)-Number(all[a]&&all[a].at||0); });
+  var limited={}; keys.slice(0,120).forEach(function(k){ limited[k]=all[k]; });
+  storeSet(K_PUSHART, JSON.stringify({version:1, items:limited}));
+}
+function pushArtFor(url, title){
+  try{ var old=JSON.parse(localStorage.getItem(K_PUSHART)||'null'); if(!old||!old.items) return null;
+    var key=pushArtKey(url), items=old.items;
+    if(key&&items[key]) return items[key];
+    if(title){ var t=cleanStr(title); for(var k in items){ if(items[k]&&cleanStr(items[k].title||'')===t) return items[k]; } }
+  }catch(e){}
+  return null;
+}
+function playRes(p, title){
+  var item=state.activeItem;
+  if(item) addPlayRecord(item);
+  var pic=item?item.poster:'', wallPic=item?item.back||item.poster:'';
+  if(pic||wallPic) savePushArtwork(p, title||p.title, pic, wallPic);
+  fmReady().then(function(fm){
+    if(fm && fm.pan && fm.pan.play){
+      return fm.pan.play({type:p.type||'', url:p.url, password:p.password||'', title:title||p.title, pic:pic, wallPic:wallPic}).catch(function(e){
+        if(fm && fm.play) return fm.play(/^magnet:/i.test(p.url)?p.url:'push://'+p.url, title||p.title, {pic:pic, wallPic:wallPic});
+        throw e;
+      });
+    }
+    if(fm && fm.play){ return fm.play(/^magnet:/i.test(p.url)?p.url:'push://'+p.url, title||p.title, {pic:pic, wallPic:wallPic}); }
+    window.open(p.url,'_blank');
+    return null;
+  }).catch(function(e){ toast('播放失败：'+(e&&e.message||'未知错误')); });
+}
+$('dplay').onclick=function(){ playFlow(); };
+$('resourceBtn').onclick=function(){
+  if($('respanel').classList.contains('hidden')){
+    var item=state.activeItem; if(!item) return;
+    openRespanel();
+    if(!state.panList.length){
+      setResStatus('正在搜索网盘资源…'); state.panAuto=false;
+      searchPan(cleanStr(item.title)).then(function(list){
+        state.panList=list;
+        if(!list.length){ setResStatus('未找到网盘资源，可试试原生搜索', false, true); return; }
+        renderResTabs(list); renderResList(state.panType||list[0].type);
+      }).catch(function(){ setResStatus('资源搜索失败，可重试或试试原生搜索', true, true); });
+    } else { renderResTabs(state.panList); renderResList(state.panType||state.panList[0].type); }
+  } else closeRespanel();
+};
+$('dback').onclick=closeDetail;
+$('fav').onclick=function(){ if(state.activeItem) toggleFav(state.activeItem) };
+
+/* ============ 13. 抽屉 ============ */
+function openDrawer(){
+  var box=clearEl('drawerBody');
+  var h1=document.createElement('h3'); h1.textContent='浏览'; box.appendChild(h1);
+  CLS.forEach(function(cls){
+    var b=document.createElement('button'); b.className='ditem focus'+(state.view==='browse'&&state.cls===cls.id?' active':''); b.tabIndex=0;
+    b.textContent=cls.name;
+    b.onclick=function(){ closeDrawer(); showBrowse(cls.id); };
+    box.appendChild(b);
+  });
+  var h2=document.createElement('h3'); h2.textContent='功能'; h2.style.marginTop='18px'; box.appendChild(h2);
+  var items=[['我的收藏',function(){ closeDrawer(); showFavs(); }],['搜索影视',function(){ closeDrawer(); openSearch(); }],['App 影视',function(){ closeDrawer(); fmReady().then(function(fm){ if(fm&&fm.openVod) fm.openVod(); else toast('请在 App 内使用'); }); }],['App 设置',function(){ closeDrawer(); fmReady().then(function(fm){ if(fm&&fm.openSetting) fm.openSetting(); else toast('请在 App 内使用设置'); }); }],['关于',function(){ closeDrawer(); toast('CINEMA 4K · WebHome 版'); }]];
+  items.forEach(function(x){
+    var b=document.createElement('button'); b.className='ditem focus'; b.tabIndex=0; b.textContent=x[0];
+    b.onclick=x[1]; box.appendChild(b);
+  });
+  $('drawer').classList.add('open'); $('overlay').classList.add('open');
+  setTimeout(function(){ var c=box.querySelector('.ditem'); if(c) c.focus(); },60);
+}
+function closeDrawer(){ $('drawer').classList.remove('open'); $('overlay').classList.remove('open'); }
+
+/* ============ 14. 顶栏导航 ============ */
+function setNav(){
+  var nav=clearEl('nav');
+  NAV.forEach(function(n){
+    var b=document.createElement('button'); b.className='focus'; b.tabIndex=0; b.textContent=n.label;
+    var active = n.view ? state.view===n.view : (state.view==='browse' && state.cls===n.cls);
+    if(active) b.classList.add('active');
+    b.onclick=function(){
+      if(n.view==='home') showHome();
+      else if(n.view==='favs') showFavs();
+      else showBrowse(n.cls);
+    };
+    nav.appendChild(b);
+  });
+}
+$('searchBtn').onclick=openSearch; $('searchClose').onclick=closeSearch; $('menuBtn').onclick=openDrawer; $('overlay').onclick=closeDrawer;
+
+/* ============ 15. 时钟 ============ */
+function clock(){ var d=new Date(); $('clock').textContent=('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2); }
+clock(); setInterval(clock,1000);
+
+/* ============ 16. 遥控器按键 ============ */
+document.addEventListener('keydown',function(e){
+  if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Enter','Escape','Backspace'].indexOf(e.key)>=0) e.preventDefault();
+  if(e.key==='Escape'||e.key==='Backspace'){
+    if($('search').classList.contains('open')){ closeSearch(); return; }
+    if($('drawer').classList.contains('open')){ closeDrawer(); return; }
+    if($('detail').classList.contains('open')){ closeDetail(); return; }
+    if(state.view==='browse'||state.view==='favs'){ showHome(); return; }
+  }
+  if(e.key==='Enter'){
+    var a=document.activeElement;
+    if(a&&a.classList.contains('focus')&&a.tagName!=='INPUT') a.click();
+    return;
+  }
+  if(!/^Arrow/.test(e.key)) return;
+  var cur=document.activeElement;
+  if(!cur||!cur.classList.contains('focus')) return;
+  var cr=cur.getBoundingClientRect(),cx=cr.left+cr.width/2,cy=cr.top+cr.height/2,dir=e.key.replace('Arrow','').toLowerCase(),best=null,bs=1e9;
+  document.querySelectorAll('.focus').forEach(function(el){
+    if(el===cur) return;
+    if(el.offsetParent===null && el.getBoundingClientRect().width===0) return;
+    var r=el.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,dx=x-cx,dy=y-cy;
+    if(dir==='left'&&dx>=-8||dir==='right'&&dx<=8||dir==='up'&&dy>=-8||dir==='down'&&dy<=8) return;
+    var p=Math.abs(dir==='left'||dir==='right'?dx:dy),s=Math.abs(dir==='left'||dir==='right'?dy:dx),score=p+1.8*s;
+    if(score<bs){bs=score;best=el}
+  });
+  if(best) best.focus();
+},true);
+
+/* ============ 17. 启动 ============ */
+setNav();
+showHome();
+fmReady().then(function(fm){
+  try { if(fm && fm.ui && fm.ui.setToolbar){ var r=fm.ui.setToolbar(true); if(r&&r.catch) r.catch(function(){}); } } catch(e){}
+  try { if(fm && fm.site && fm.site.info) fm.site.info().then(function(d){
+    if(d && d.name) SHELL_SITE_NAME=d.name;
+  }).catch(function(){}); } catch(e){}
+  try { if(fm && fm.config && fm.config.info) fm.config.info().then(function(d){
+    if(d){ if(typeof d.driveCheck==='boolean') SHELL_DRIVE_CHECK=d.driveCheck; if(d.desc) SHELL_CONFIG_DESC=d.desc; }
+    if(!$('respanel').classList.contains('hidden') && $('reslist').querySelector('.rstatus')){
+      $('resSub').textContent = SHELL_SITE_NAME ? ('当前片源：'+SHELL_SITE_NAME+' · 可用原生搜索') : (SHELL_CONFIG_DESC ? ('片源配置：'+SHELL_CONFIG_DESC) : '');
+    }
+  }).catch(function(){}); } catch(e){}
+});
+})();
+</script></body></html>
